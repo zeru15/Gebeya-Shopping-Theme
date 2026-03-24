@@ -1,4 +1,18 @@
 <?php
+/**
+ * Change default wordpress post per page number from 10 to 6
+ */
+function gebeya_modify_posts_per_page($query) {
+
+    if (!is_admin() && $query->is_main_query()) {
+
+        // Blog page
+        if (is_home() || is_archive()) {
+            $query->set('posts_per_page', 6);
+        }
+    }
+}
+add_action('pre_get_posts', 'gebeya_modify_posts_per_page');
 
 /**
  * Custom Walker Class
