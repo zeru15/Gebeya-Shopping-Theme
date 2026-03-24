@@ -223,7 +223,7 @@
                                             'menu_id' => false,
                                             'depth' => 3,
                                             'items_wrap' => '%3$s',
-                                            'walker' => new Gebeya_Megamenu_Walker(),
+                                            'walker' => new gebeyashoptheme_Megamenu_Walker(),
                                         ));
                                         ?>
 
