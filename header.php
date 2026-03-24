@@ -35,10 +35,10 @@
 <body>
 
     <?php
-    $logo = get_theme_mod('header_logo');
-    $phone = get_theme_mod('header_phone');
-    $signin_text = get_theme_mod('header_signin_text');
-    $signin_link = get_theme_mod('header_signin_link');
+    $header_logo = get_theme_mod('header_logo');
+    $header_phone = get_theme_mod('header_phone');
+    $header_signin_text = get_theme_mod('header_signin_text');
+    $header_signin_link = get_theme_mod('header_signin_link');
     ?>
 
 
@@ -47,7 +47,7 @@
             <div class="header-top">
                 <div class="container">
                     <div class="header-left">
-                        <a href="tel: <?php echo $phone ?>"><i class="icon-phone"></i>Call: <?php echo $phone ?></a>
+                        <a href="tel: <?php echo $header_phone ?>"><i class="icon-phone"></i>Call: <?php echo $header_phone ?></a>
                     </div><!-- End .header-left -->
 
                     <div class="header-right">
@@ -58,7 +58,7 @@
                                 <ul>
 
                                     <li class="login">
-                                        <a href="#signin-modal" data-toggle="modal"><?php echo $signin_text ?></a>
+                                        <a href="#signin-modal" data-toggle="modal"><?php echo $header_signin_text ?></a>
                                     </li>
                                 </ul>
                             </li>
@@ -77,9 +77,9 @@
 
                         <!-- Logo -->
                         <div class="logo">
-                            <?php if ($logo): ?>
+                            <?php if ($header_logo): ?>
                                 <a href="index.html" class="logo">
-                                    <img src="<?php echo $logo ?>" alt=" Logo" width="65" height="25">
+                                    <img src="<?php echo $header_logo ?>" alt=" Logo" width="65" height="25">
                                 </a>
                             <?php else: ?>
                                 <a href="index.html" class="logo">

@@ -110,7 +110,7 @@ function gebeyashoptheme_customize_register($wp_customize)
 {
 
     // Section: Header Settings
-    $wp_customize->add_section('gebeya_header_settings', array(
+    $wp_customize->add_section('gebeyashoptheme_header_settings', array(
         'title' => __('Header Settings', 'gebeyashoptheme'),
         'priority' => 30,
     ));
@@ -123,7 +123,7 @@ function gebeyashoptheme_customize_register($wp_customize)
         'header_logo',
         array(
             'label' => __('Logo', 'gebeyashoptheme'),
-            'section' => 'gebeya_header_settings',
+            'section' => 'gebeyashoptheme_header_settings',
         )
     ));
 
@@ -134,7 +134,7 @@ function gebeyashoptheme_customize_register($wp_customize)
 
     $wp_customize->add_control('header_phone', array(
         'label' => __('Phone Number', 'gebeyashoptheme'),
-        'section' => 'gebeya_header_settings',
+        'section' => 'gebeyashoptheme_header_settings',
         'type' => 'text',
     ));
 
@@ -145,7 +145,7 @@ function gebeyashoptheme_customize_register($wp_customize)
 
     $wp_customize->add_control('header_signin_text', array(
         'label' => __('Sign In Text', 'gebeyashoptheme'),
-        'section' => 'gebeya_header_settings',
+        'section' => 'gebeyashoptheme_header_settings',
         'type' => 'text',
     ));
 
@@ -156,7 +156,7 @@ function gebeyashoptheme_customize_register($wp_customize)
 
     $wp_customize->add_control('header_signin_link', array(
         'label' => __('Sign In Link', 'gebeyashoptheme'),
-        'section' => 'gebeya_header_settings',
+        'section' => 'gebeyashoptheme_header_settings',
         'type' => 'url',
     ));
 }
@@ -167,11 +167,12 @@ add_action('customize_register', 'gebeyashoptheme_customize_register');
 /**
  * Footer Customizer Settings
  */
-function gebeyashoptheme_footer_customizer($wp_customize) {
+function gebeyashoptheme_footer_customizer($wp_customize)
+{
 
     // 🔹 Section: Footer Settings
-    $wp_customize->add_section('gebeya_footer_settings', array(
-        'title'    => __('Footer Settings', 'gebeyashoptheme'),
+    $wp_customize->add_section('gebeyashoptheme_footer_settings', array(
+        'title' => __('Footer Settings', 'gebeyashoptheme'),
         'priority' => 40,
     ));
 
@@ -184,8 +185,8 @@ function gebeyashoptheme_footer_customizer($wp_customize) {
         $wp_customize,
         'footer_logo',
         array(
-            'label'   => __('Footer Logo', 'gebeyashoptheme'),
-            'section' => 'gebeya_footer_settings',
+            'label' => __('Footer Logo', 'gebeyashoptheme'),
+            'section' => 'gebeyashoptheme_footer_settings',
         )
     ));
 
@@ -197,9 +198,9 @@ function gebeyashoptheme_footer_customizer($wp_customize) {
     ));
 
     $wp_customize->add_control('footer_description', array(
-        'label'   => __('Footer Description', 'gebeyashoptheme'),
-        'section' => 'gebeya_footer_settings',
-        'type'    => 'textarea',
+        'label' => __('Footer Description', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_footer_settings',
+        'type' => 'textarea',
     ));
 
     // =========================
@@ -210,9 +211,9 @@ function gebeyashoptheme_footer_customizer($wp_customize) {
     ));
 
     $wp_customize->add_control('footer_question', array(
-        'label'   => __('Footer Question Text', 'gebeyashoptheme'),
-        'section' => 'gebeya_footer_settings',
-        'type'    => 'text',
+        'label' => __('Footer Question Text', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_footer_settings',
+        'type' => 'text',
     ));
 
     // =========================
@@ -223,9 +224,9 @@ function gebeyashoptheme_footer_customizer($wp_customize) {
     ));
 
     $wp_customize->add_control('footer_phone', array(
-        'label'   => __('Footer Phone', 'gebeyashoptheme'),
-        'section' => 'gebeya_footer_settings',
-        'type'    => 'text',
+        'label' => __('Footer Phone', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_footer_settings',
+        'type' => 'text',
     ));
 
     // =========================
@@ -236,9 +237,23 @@ function gebeyashoptheme_footer_customizer($wp_customize) {
     ));
 
     $wp_customize->add_control('footer_copyright', array(
-        'label'   => __('Copyright Text', 'gebeyashoptheme'),
-        'section' => 'gebeya_footer_settings',
-        'type'    => 'text',
+        'label' => __('Copyright Text', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_footer_settings',
+        'type' => 'text',
+    ));
+
+    // =========================
+// 🔸 Payment Image
+// =========================
+    $wp_customize->add_setting('payment_image');
+
+    $wp_customize->add_control(new WP_Customize_Image_Control(
+        $wp_customize,
+        'payment_image',
+        array(
+            'label' => __('Payment Image', 'gebeyashoptheme'),
+            'section' => 'gebeyashoptheme_footer_settings',
+        )
     ));
 
     // =========================
@@ -254,9 +269,9 @@ function gebeyashoptheme_footer_customizer($wp_customize) {
         ));
 
         $wp_customize->add_control("footer_{$social}_link", array(
-            'label'   => ucfirst($social) . ' ' . __('Link', 'gebeyashoptheme'),
-            'section' => 'gebeya_footer_settings',
-            'type'    => 'url',
+            'label' => ucfirst($social) . ' ' . __('Link', 'gebeyashoptheme'),
+            'section' => 'gebeyashoptheme_footer_settings',
+            'type' => 'url',
         ));
     }
 }
