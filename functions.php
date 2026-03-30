@@ -2,7 +2,8 @@
 /**
  * Change default wordpress post per page number from 10 to 6
  */
-function gebeya_modify_posts_per_page($query) {
+function gebeya_modify_posts_per_page($query)
+{
 
     if (!is_admin() && $query->is_main_query()) {
 
@@ -17,7 +18,7 @@ add_action('pre_get_posts', 'gebeya_modify_posts_per_page');
 /**
  * Custom Walker Class
  */
-class gebeyashoptheme_Megamenu_Walker extends Walker_Nav_Menu
+class Gebeyashoptheme_Megamenu_Walker extends Walker_Nav_Menu
 {
     function start_el(&$output, $item, $depth = 0, $args = null, $id = 0)
     {
@@ -291,3 +292,492 @@ function gebeyashoptheme_footer_customizer($wp_customize)
 }
 
 add_action('customize_register', 'gebeyashoptheme_footer_customizer');
+
+
+/**
+ * Registering Sidebars For Blog Page
+ */
+function gebeyashoptheme_register_sidebars()
+{
+
+    register_sidebar(array(
+        'name' => __('Blog Sidebar', 'gebeyashoptheme'),
+        'id' => 'blog-sidebar',
+        'description' => __('Widgets for Blog Sidebar', 'gebeyashoptheme'),
+
+        // 🔥 Match your HTML structure
+        'before_widget' => '<div class="widget %2$s">',
+        'after_widget' => '</div>',
+
+        'before_title' => '<h3 class="widget-title">',
+        'after_title' => '</h3>',
+    ));
+}
+
+add_action('widgets_init', 'gebeyashoptheme_register_sidebars');
+
+
+/**
+ * Registering Widgets For Blog Page
+ */
+function gebeyashoptheme_register_widgets()
+{
+    register_widget('Gebeyashoptheme_Search_Widget');
+    register_widget('Gebeyashoptheme_Categories_Widget');
+    register_widget('Gebeyashoptheme_Popular_Posts_Widget');
+    register_widget('Gebeyashoptheme_Banner_Widget');
+    register_widget('Gebeyashoptheme_Tags_Widget');
+}
+add_action('widgets_init', 'gebeyashoptheme_register_widgets');
+
+
+/**
+ * Search Widget
+ */
+class Gebeyashoptheme_Search_Widget extends WP_Widget
+{
+
+    function __construct()
+    {
+        parent::__construct(
+            'gebeyashoptheme_search',
+            __('Gebeya Search Widget', 'gebeyashoptheme')
+        );
+    }
+
+    function widget($args, $instance)
+    {
+        echo $args['before_widget'];
+        ?>
+        <div class="widget widget-search">
+            <h3 class="widget-title"><?php _e('Search', 'gebeyashoptheme'); ?></h3>
+            <?php get_search_form(); ?>
+        </div>
+        <?php
+        echo $args['after_widget'];
+    }
+}
+
+/**
+ * Categories Widget
+ */
+class Gebeyashoptheme_Categories_Widget extends WP_Widget
+{
+
+    function __construct()
+    {
+        parent::__construct(
+            'gebeyashoptheme_categories',
+            __('Gebeya Categories Widget', 'gebeyashoptheme')
+        );
+    }
+
+    function widget($args, $instance)
+    {
+        echo $args['before_widget'];
+        ?>
+        <div class="widget widget-cats">
+            <h3 class="widget-title"><?php _e('Categories', 'gebeyashoptheme'); ?></h3>
+            <ul>
+                <?php
+                $categories = get_categories();
+
+                foreach ($categories as $cat) {
+                    echo '<li>
+                        <a href="' . esc_url(get_category_link($cat->term_id)) . '">'
+                        . esc_html($cat->name) .
+                        '<span>' . esc_html($cat->count) . '</span>
+                        </a>
+                    </li>';
+                }
+                ?>
+            </ul>
+        </div>
+        <?php
+        echo $args['after_widget'];
+    }
+}
+
+/**
+ * Popular posts Widget
+ */
+class Gebeyashoptheme_Popular_Posts_Widget extends WP_Widget
+{
+
+    function __construct()
+    {
+        parent::__construct(
+            'gebeyashoptheme_popular_posts',
+            __('Gebeya Popular Posts Widget', 'gebeyashoptheme')
+        );
+    }
+
+    function widget($args, $instance)
+    {
+
+        $query = new WP_Query(array(
+            'posts_per_page' => 4,
+            'orderby' => 'date'
+        ));
+
+        echo $args['before_widget'];
+        ?>
+        <div class="widget">
+            <h3 class="widget-title"><?php _e('Popular Posts', 'gebeyashoptheme'); ?></h3>
+
+            <ul class="posts-list">
+                <?php while ($query->have_posts()):
+                    $query->the_post(); ?>
+                    <li>
+                        <figure>
+                            <a href="<?php the_permalink(); ?>">
+                                <?php the_post_thumbnail('thumbnail'); ?>
+                            </a>
+                        </figure>
+
+                        <div>
+                            <span><?php echo esc_html(get_the_date()); ?></span>
+                            <h4>
+                                <a href="<?php the_permalink(); ?>">
+                                    <?php the_title(); ?>
+                                </a>
+                            </h4>
+                        </div>
+                    </li>
+                <?php endwhile;
+                wp_reset_postdata(); ?>
+            </ul>
+        </div>
+        <?php
+        echo $args['after_widget'];
+    }
+}
+
+/**
+ * Tags Widget
+ */
+class Gebeyashoptheme_Tags_Widget extends WP_Widget
+{
+
+    function __construct()
+    {
+        parent::__construct(
+            'gebeyashoptheme_tags',
+            __('Gebeya Tags Widget', 'gebeyashoptheme')
+        );
+    }
+
+    function widget($args, $instance)
+    {
+        echo $args['before_widget'];
+        ?>
+        <div class="widget">
+            <h3 class="widget-title"><?php _e('Browse Tags', 'gebeyashoptheme'); ?></h3>
+
+            <div class="tagcloud">
+                <?php
+                $tags = get_tags();
+
+                foreach ($tags as $tag) {
+                    echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '">'
+                        . esc_html($tag->name) . '</a>';
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        echo $args['after_widget'];
+    }
+}
+
+/**
+ * Banner Widget
+ */
+class Gebeyashoptheme_Banner_Widget extends WP_Widget
+{
+
+    function __construct()
+    {
+        parent::__construct(
+            'gebeyashoptheme_banner',
+            __('Banner Widget', 'gebeyashoptheme')
+        );
+    }
+
+    // 🔹 Admin Form
+    function form($instance)
+    {
+
+        $title = $instance['title'] ?? '';
+        $image = $instance['image'] ?? '';
+        $link = $instance['link'] ?? '';
+        $target = $instance['target'] ?? '';
+        ?>
+
+        <p>
+            <label><?php _e('Title:', 'gebeyashoptheme'); ?></label>
+            <input class="widefat" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo esc_attr($title); ?>">
+        </p>
+
+        <p>
+            <label><?php _e('Image URL:', 'gebeyashoptheme'); ?></label>
+            <input class="widefat" name="<?php echo $this->get_field_name('image'); ?>" value="<?php echo esc_attr($image); ?>">
+        </p>
+
+        <p>
+            <label><?php _e('Banner Link:', 'gebeyashoptheme'); ?></label>
+            <input class="widefat" name="<?php echo $this->get_field_name('link'); ?>" value="<?php echo esc_attr($link); ?>">
+        </p>
+
+        <p>
+            <input type="checkbox" <?php checked($target, 'on'); ?> name="<?php echo $this->get_field_name('target'); ?>">
+            <label><?php _e('Open in new tab', 'gebeyashoptheme'); ?></label>
+        </p>
+
+        <?php
+    }
+
+    // 🔹 Save Data
+    function update($new, $old)
+    {
+
+        return array(
+            'title' => sanitize_text_field($new['title']),
+            'image' => esc_url_raw($new['image']),
+            'link' => esc_url_raw($new['link']),
+            'target' => isset($new['target']) ? 'on' : ''
+        );
+    }
+
+    // 🔹 Frontend Output
+    function widget($args, $instance)
+    {
+
+        $title = $instance['title'] ?? '';
+        $image = $instance['image'] ?? '';
+        $link = $instance['link'] ?? '#';
+        $target = (!empty($instance['target'])) ? ' target="_blank"' : '';
+
+        if (empty($image))
+            return;
+
+        echo $args['before_widget'];
+        ?>
+
+        <div class="widget widget-banner-sidebar">
+
+            <?php if (!empty($title)): ?>
+                <div class="banner-sidebar-title">
+                    <?php echo esc_html($title); ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="banner-sidebar banner-overlay">
+                <a href="<?php echo esc_url($link); ?>" <?php echo $target; ?>>
+                    <img src="<?php echo esc_url($image); ?>" alt="banner">
+                </a>
+            </div>
+
+        </div>
+
+        <?php
+        echo $args['after_widget'];
+    }
+}
+
+/**
+ * Adding Woocommerce Support
+ */
+function gebeyashoptheme_add_woocommerce_support()
+{
+    add_theme_support('woocommerce');
+
+    // Product gallery features
+    add_theme_support('wc-product-gallery-zoom');
+    add_theme_support('wc-product-gallery-lightbox');
+    add_theme_support('wc-product-gallery-slider');
+
+    add_theme_support('post-thumbnails');
+}
+add_action('after_setup_theme', 'gebeyashoptheme_add_woocommerce_support');
+
+/**
+ * Remove Woocommerce Default Wrapper
+ */
+// function gebeyashoptheme_remove_wc_wrapper() {
+//     remove_action('woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10);
+//     remove_action('woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10);
+// }
+// add_action('wp', 'gebeyashoptheme_remove_wc_wrapper');
+
+// ADD your wrapper
+// add_action('woocommerce_before_shop_loop', function() {
+//     echo '<div class="products mb-3">';
+//     echo '<div class="row justify-content-center">';
+// }, 20);
+
+// add_action('woocommerce_after_shop_loop', function() {
+//     echo '</div></div>';
+// }, 20);
+
+remove_action('woocommerce_before_shop_loop_item', 'woocommerce_template_loop_product_link_open', 10);
+remove_action('woocommerce_after_shop_loop_item', 'woocommerce_template_loop_product_link_close', 5);
+
+remove_action('woocommerce_shop_loop_item_title', 'woocommerce_template_loop_product_title', 10);
+remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10);
+remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5);
+remove_action('woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10);
+
+remove_action('woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30);
+remove_action('woocommerce_before_shop_loop', 'woocommerce_result_count', 20);
+
+// Remove default WooCommerce pagination
+remove_action('woocommerce_after_shop_loop', 'woocommerce_pagination', 10);
+
+
+/**
+ * Registering Sidebars For Shop Page
+ */
+function gebeyashoptheme_widgets_init()
+{
+    register_sidebar(array(
+        'name' => 'Shop Sidebar',
+        'id' => 'shop-sidebar',
+        'before_widget' => '<div class="widget widget-collapsible">',
+        'after_widget' => '</div>',
+        'before_title' => '<h3 class="widget-title">',
+        'after_title' => '</h3>',
+    ));
+}
+add_action('widgets_init', 'gebeyashoptheme_widgets_init');
+
+
+/**
+ * Query Filter Products
+ */
+add_action('woocommerce_product_query', function ($q) {
+
+    $tax_query = [];
+
+    // CATEGORY
+    if (!empty($_GET['category'])) {
+        $categories = explode(',', sanitize_text_field($_GET['category']));
+        $tax_query[] = [
+            'taxonomy' => 'product_cat',
+            'field' => 'slug',
+            'terms' => $categories,
+        ];
+    }
+
+    // BRAND
+    if (!empty($_GET['brand'])) {
+        $brands = explode(',', sanitize_text_field($_GET['brand']));
+        $tax_query[] = [
+            'taxonomy' => 'pa_brand',
+            'field' => 'slug',
+            'terms' => $brands,
+        ];
+    }
+
+    if (!empty($tax_query)) {
+        $q->set('tax_query', $tax_query);
+    }
+
+    // ✅ PRICE FILTER
+    if (isset($_GET['min_price']) || isset($_GET['max_price'])) {
+
+        $meta_query = $q->get('meta_query');
+
+        $min = isset($_GET['min_price']) ? floatval($_GET['min_price']) : 0;
+        $max = isset($_GET['max_price']) ? floatval($_GET['max_price']) : 999999;
+
+        $meta_query[] = [
+            'key' => '_price',
+            'value' => [$min, $max],
+            'compare' => 'BETWEEN',
+            'type' => 'NUMERIC'
+        ];
+
+        $q->set('meta_query', $meta_query);
+    }
+
+});
+
+/**
+ * Enqueue shop.js for filter
+ */
+function gebeyashoptheme_scripts()
+{
+
+    if (is_shop() || is_product_taxonomy()) {
+        wp_enqueue_script(
+            'shop-filters',
+            get_template_directory_uri() . '/assets/js/shop.js',
+            [],
+            null,
+            true
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'gebeyashoptheme_scripts');
+
+/**
+ * Adding Slider
+ */
+function theme_scripts()
+{
+    wp_enqueue_style('nouislider-css', 'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css');
+    wp_enqueue_script('nouislider-js', 'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js', [], null, true);
+
+    wp_enqueue_script('custom-filter', get_template_directory_uri() . '/assets/js/filter.js', ['nouislider-js'], null, true);
+
+
+    global $wpdb;
+
+    $min_price = $wpdb->get_var("
+    SELECT MIN(meta_value+0)
+    FROM {$wpdb->postmeta}
+    WHERE meta_key = '_price'
+");
+
+    $max_price = $wpdb->get_var("
+    SELECT MAX(meta_value+0)
+    FROM {$wpdb->postmeta}
+    WHERE meta_key = '_price'
+");
+
+
+    wp_localize_script('custom-filter', 'price_range', [
+        'min' => $min_price,
+        'max' => $max_price,
+    ]);
+
+}
+add_action('wp_enqueue_scripts', 'theme_scripts');
+
+
+/**
+ * Prevent WordPress redirecting incorrectly
+ */
+add_filter('redirect_canonical', function ($redirect_url, $requested_url) {
+    if (is_shop() && (isset($_GET['category']) || isset($_GET['min_price']))) {
+        return false;
+    }
+    return $redirect_url;
+}, 10, 2);
+
+add_action('pre_get_posts', function ($query) {
+
+    if (!is_admin() && $query->is_main_query() && is_shop()) {
+
+        if (
+            isset($_GET['category']) ||
+            isset($_GET['brand']) ||
+            isset($_GET['min_price']) ||
+            isset($_GET['max_price'])
+        ) {
+            $query->set('paged', 1);
+        }
+
+    }
+});

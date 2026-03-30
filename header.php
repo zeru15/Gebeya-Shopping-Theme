@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/assets/css/style.css">
     <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/assets/css/skins/skin-demo-13.css">
     <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/assets/css/demos/demo-13.css">
+
     <?php wp_head(); ?>
 </head>
 
@@ -78,7 +79,7 @@
                         <!-- Logo -->
                         <div class="logo">
                             <?php if ($header_logo): ?>
-                                <a href="index.html" class="logo">
+                                <a href="<?php echo esc_url(site_url()); ?>" class="logo">
                                     <img src="<?php echo $header_logo ?>" alt=" Logo" width="65" height="25">
                                 </a>
                             <?php else: ?>
@@ -223,7 +224,7 @@
                                             'menu_id' => false,
                                             'depth' => 3,
                                             'items_wrap' => '%3$s',
-                                            'walker' => new gebeyashoptheme_Megamenu_Walker(),
+                                            'walker' => new Gebeyashoptheme_Megamenu_Walker(),
                                         ));
                                         ?>
 
