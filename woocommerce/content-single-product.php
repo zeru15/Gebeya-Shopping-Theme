@@ -51,7 +51,16 @@ $comments = get_comments(array(
                 ?>
 
                 <li class="breadcrumb-item active" aria-current="page">
-                    <?php the_title(); ?>
+                    <?php
+                    $title = get_the_title();
+                    $words = explode(' ', $title);
+
+                    if (count($words) > 7) {
+                        $title = implode(' ', array_slice($words, 0, 7)) . '...';
+                    }
+
+                    echo esc_html($title);
+                    ?>
                 </li>
 
             </ol>
@@ -240,17 +249,6 @@ $comments = get_comments(array(
                                     </a>
 
                                 <?php endif; ?>
-
-                                <!-- Wishlist / Compare -->
-                                <div class="details-action-wrapper">
-                                    <a href="#" class="btn-product btn-wishlist">
-                                        <span><?php _e('Add to Wishlist', 'gebeyashoptheme'); ?></span>
-                                    </a>
-
-                                    <a href="#" class="btn-product btn-compare">
-                                        <span><?php _e('Add to Compare', 'gebeyashoptheme'); ?></span>
-                                    </a>
-                                </div>
 
                             </div>
 
@@ -543,246 +541,128 @@ $comments = get_comments(array(
 
             <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
 
-            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
-                data-owl-options='{
-                            "nav": false, 
-                            "dots": true,
-                            "margin": 20,
-                            "loop": false,
-                            "responsive": {
-                                "0": {
-                                    "items":1
-                                },
-                                "480": {
-                                    "items":2
-                                },
-                                "768": {
-                                    "items":3
-                                },
-                                "992": {
-                                    "items":4
-                                },
-                                "1200": {
-                                    "items":4,
-                                    "nav": true,
-                                    "dots": false
-                                }
-                            }
-                        }'>
-                <div class="product product-7 text-center">
-                    <figure class="product-media">
-                        <span class="product-label label-new">New</span>
-                        <a href="product.html">
-                            <img src="assets/images/products/product-4.jpg" alt="Product image" class="product-image">
-                        </a>
+            <?php
+            global $product;
 
-                        <div class="product-action-vertical">
-                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                    wishlist</span></a>
-                            <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                title="Quick view"><span>Quick view</span></a>
-                            <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                        </div><!-- End .product-action-vertical -->
+            // Get related products
+            $related_ids = wc_get_related_products($product->get_id(), 8);
 
-                        <div class="product-action">
-                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                        </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
+            if ($related_ids):
 
-                    <div class="product-body">
-                        <div class="product-cat">
-                            <a href="#">Women</a>
-                        </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="product.html">Brown paperbag waist <br>pencil skirt</a></h3>
-                        <!-- End .product-title -->
-                        <div class="product-price">
-                            $60.00
-                        </div><!-- End .product-price -->
-                        <div class="ratings-container">
-                            <div class="ratings">
-                                <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                            </div><!-- End .ratings -->
-                            <span class="ratings-text">( 2 Reviews )</span>
-                        </div><!-- End .rating-container -->
+                $args = array(
+                    'post_type' => 'product',
+                    'post__in' => $related_ids,
+                    'posts_per_page' => 8,
+                );
 
-                        <div class="product-nav product-nav-thumbs">
-                            <a href="#" class="active">
-                                <img src="assets/images/products/product-4-thumb.jpg" alt="product desc">
-                            </a>
-                            <a href="#">
-                                <img src="assets/images/products/product-4-2-thumb.jpg" alt="product desc">
-                            </a>
+                $related_products = new WP_Query($args);
+                ?>
 
-                            <a href="#">
-                                <img src="assets/images/products/product-4-3-thumb.jpg" alt="product desc">
-                            </a>
-                        </div><!-- End .product-nav -->
-                    </div><!-- End .product-body -->
-                </div><!-- End .product -->
+                <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
+                    data-owl-options='{
+        "nav": false,
+        "dots": true,
+        "margin": 20,
+        "loop": false,
+        "responsive": {
+            "0": {"items":1},
+            "480": {"items":2},
+            "768": {"items":3},
+            "992": {"items":4},
+            "1200": {"items":4,"nav": true,"dots": false}
+        }
+     }'>
 
-                <div class="product product-7 text-center">
-                    <figure class="product-media">
-                        <span class="product-label label-out">Out of Stock</span>
-                        <a href="product.html">
-                            <img src="assets/images/products/product-6.jpg" alt="Product image" class="product-image">
-                        </a>
+                    <?php while ($related_products->have_posts()):
+                        $related_products->the_post();
 
-                        <div class="product-action-vertical">
-                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                    wishlist</span></a>
-                            <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                title="Quick view"><span>Quick view</span></a>
-                            <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                        </div><!-- End .product-action-vertical -->
+                        global $product;
+                        ?>
 
-                        <div class="product-action">
-                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                        </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
+                        <div class="product product-7 text-center">
 
-                    <div class="product-body">
-                        <div class="product-cat">
-                            <a href="#">Jackets</a>
-                        </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="product.html">Khaki utility boiler jumpsuit</a></h3>
-                        <!-- End .product-title -->
-                        <div class="product-price">
-                            <span class="out-price">$120.00</span>
-                        </div><!-- End .product-price -->
-                        <div class="ratings-container">
-                            <div class="ratings">
-                                <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                            </div><!-- End .ratings -->
-                            <span class="ratings-text">( 6 Reviews )</span>
-                        </div><!-- End .rating-container -->
-                    </div><!-- End .product-body -->
-                </div><!-- End .product -->
+                            <!-- 🔹 IMAGE -->
+                            <figure class="product-media">
 
-                <div class="product product-7 text-center">
-                    <figure class="product-media">
-                        <span class="product-label label-top">Top</span>
-                        <a href="product.html">
-                            <img src="assets/images/products/product-11.jpg" alt="Product image" class="product-image">
-                        </a>
+                                <?php if (!$product->is_in_stock()): ?>
+                                    <span class="product-label label-out"><?php _e('Out of Stock', 'gebeyashoptheme'); ?></span>
+                                <?php endif; ?>
 
-                        <div class="product-action-vertical">
-                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                    wishlist</span></a>
-                            <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                title="Quick view"><span>Quick view</span></a>
-                            <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                        </div><!-- End .product-action-vertical -->
+                                <?php if ($product->is_on_sale()): ?>
+                                    <span class="product-label label-sale"><?php _e('Sale', 'gebeyashoptheme'); ?></span>
+                                <?php endif; ?>
 
-                        <div class="product-action">
-                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                        </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
+                                <a href="<?php the_permalink(); ?>">
+                                    <?php echo woocommerce_get_product_thumbnail(); ?>
+                                </a>
 
-                    <div class="product-body">
-                        <div class="product-cat">
-                            <a href="#">Shoes</a>
-                        </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="product.html">Light brown studded Wide fit wedges</a></h3>
-                        <!-- End .product-title -->
-                        <div class="product-price">
-                            $110.00
-                        </div><!-- End .product-price -->
-                        <div class="ratings-container">
-                            <div class="ratings">
-                                <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                            </div><!-- End .ratings -->
-                            <span class="ratings-text">( 1 Reviews )</span>
-                        </div><!-- End .rating-container -->
+                                <!-- 🔹 ACTIONS -->
+                                <div class="product-action-vertical">
+                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable">
+                                        <span><?php _e('add to wishlist', 'gebeyashoptheme'); ?></span>
+                                    </a>
 
-                        <div class="product-nav product-nav-thumbs">
-                            <a href="#" class="active">
-                                <img src="assets/images/products/product-11-thumb.jpg" alt="product desc">
-                            </a>
-                            <a href="#">
-                                <img src="assets/images/products/product-11-2-thumb.jpg" alt="product desc">
-                            </a>
+                                    <a href="<?php the_permalink(); ?>" class="btn-product-icon btn-quickview">
+                                        <span><?php _e('Quick view', 'gebeyashoptheme'); ?></span>
+                                    </a>
 
-                            <a href="#">
-                                <img src="assets/images/products/product-11-3-thumb.jpg" alt="product desc">
-                            </a>
-                        </div><!-- End .product-nav -->
-                    </div><!-- End .product-body -->
-                </div><!-- End .product -->
+                                    <a href="#" class="btn-product-icon btn-compare">
+                                        <span><?php _e('Compare', 'gebeyashoptheme'); ?></span>
+                                    </a>
+                                </div>
 
-                <div class="product product-7 text-center">
-                    <figure class="product-media">
-                        <a href="product.html">
-                            <img src="assets/images/products/product-10.jpg" alt="Product image" class="product-image">
-                        </a>
+                                <!-- 🔹 ADD TO CART -->
+                                <div class="product-action">
+                                    <?php
+                                    echo sprintf(
+                                        '<a href="%s" class="btn-product btn-cart"><span>%s</span></a>',
+                                        esc_url($product->add_to_cart_url()),
+                                        esc_html($product->add_to_cart_text())
+                                    );
+                                    ?>
+                                </div>
 
-                        <div class="product-action-vertical">
-                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                    wishlist</span></a>
-                            <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                title="Quick view"><span>Quick view</span></a>
-                            <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                        </div><!-- End .product-action-vertical -->
+                            </figure>
 
-                        <div class="product-action">
-                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                        </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
+                            <!-- 🔹 BODY -->
+                            <div class="product-body">
 
-                    <div class="product-body">
-                        <div class="product-cat">
-                            <a href="#">Jumpers</a>
-                        </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="product.html">Yellow button front tea top</a></h3>
-                        <!-- End .product-title -->
-                        <div class="product-price">
-                            $56.00
-                        </div><!-- End .product-price -->
-                        <div class="ratings-container">
-                            <div class="ratings">
-                                <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                            </div><!-- End .ratings -->
-                            <span class="ratings-text">( 0 Reviews )</span>
-                        </div><!-- End .rating-container -->
-                    </div><!-- End .product-body -->
-                </div><!-- End .product -->
+                                <!-- Category -->
+                                <div class="product-cat">
+                                    <?php echo wc_get_product_category_list($product->get_id(), ', '); ?>
+                                </div>
 
-                <div class="product product-7 text-center">
-                    <figure class="product-media">
-                        <a href="product.html">
-                            <img src="assets/images/products/product-7.jpg" alt="Product image" class="product-image">
-                        </a>
+                                <!-- Title -->
+                                <h3 class="product-title">
+                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                </h3>
 
-                        <div class="product-action-vertical">
-                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                    wishlist</span></a>
-                            <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                title="Quick view"><span>Quick view</span></a>
-                            <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                        </div><!-- End .product-action-vertical -->
+                                <!-- Price -->
+                                <div class="product-price">
+                                    <?php echo $product->get_price_html(); ?>
+                                </div>
 
-                        <div class="product-action">
-                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                        </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
+                                <!-- Ratings -->
+                                <div class="ratings-container">
+                                    <div class="ratings">
+                                        <div class="ratings-val"
+                                            style="width: <?php echo ($product->get_average_rating() / 5) * 100; ?>%;"></div>
+                                    </div>
+                                    <span class="ratings-text">
+                                        (<?php echo $product->get_review_count(); ?>         <?php _e('Reviews', 'gebeyashoptheme'); ?>)
+                                    </span>
+                                </div>
 
-                    <div class="product-body">
-                        <div class="product-cat">
-                            <a href="#">Jeans</a>
-                        </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="product.html">Blue utility pinafore denim dress</a></h3>
-                        <!-- End .product-title -->
-                        <div class="product-price">
-                            $76.00
-                        </div><!-- End .product-price -->
-                        <div class="ratings-container">
-                            <div class="ratings">
-                                <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                            </div><!-- End .ratings -->
-                            <span class="ratings-text">( 2 Reviews )</span>
-                        </div><!-- End .rating-container -->
-                    </div><!-- End .product-body -->
-                </div><!-- End .product -->
-            </div><!-- End .owl-carousel -->
+                            </div>
+
+                        </div>
+
+                    <?php endwhile;
+                    wp_reset_postdata(); ?>
+
+                </div><!-- End .owl-carousel -->
+
+            <?php endif; ?><!-- End .owl-carousel -->
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->

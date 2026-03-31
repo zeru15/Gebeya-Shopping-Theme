@@ -808,6 +808,14 @@ function gebeyashoptheme_redirect_after_add_to_cart() {
 }
 add_action('template_redirect', 'gebeyashoptheme_redirect_after_add_to_cart');
 
+add_filter('woocommerce_add_to_cart_redirect', 'gebeyashoptheme_remove_add_to_cart_param');
+
+function gebeyashoptheme_remove_add_to_cart_param($url) {
+
+    // Redirect to same page WITHOUT query args
+    return remove_query_arg('add-to-cart');
+}
+
 
 /**
  * Delivery and Returns Customizer
