@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const slider = document.getElementById('price-slider');
-    
+
 
     if (!slider) return;
 
@@ -43,14 +43,12 @@ document.addEventListener('DOMContentLoaded', function () {
  */
 jQuery(document).ready(function ($) {
 
-    $('.filter-category, #price-slider').on('change', function () {
+    $('.filter-category').on('change', function () {
 
         const url = new URL(window.location.href);
 
-        // REMOVE pagination
+        // Reset pagination
         url.searchParams.delete('paged');
-
-        // ALSO remove /page/x/ from URL (important)
         url.pathname = url.pathname.replace(/\/page\/\d+\//, '/');
 
         // Categories
@@ -65,13 +63,15 @@ jQuery(document).ready(function ($) {
             url.searchParams.delete('category');
         }
 
-        // Price
-        if (typeof price_range !== "undefined") {
-            url.searchParams.set('min_price', price_range[0]);
-            url.searchParams.set('max_price', price_range[1]);
+        // ✅ KEEP EXISTING PRICE (DO NOT OVERRIDE)
+        const min = url.searchParams.get('min_price');
+        const max = url.searchParams.get('max_price');
+
+        if (min && max) {
+            url.searchParams.set('min_price', min);
+            url.searchParams.set('max_price', max);
         }
 
-        // 🔥 Redirect
         window.location.href = url.toString();
     });
 

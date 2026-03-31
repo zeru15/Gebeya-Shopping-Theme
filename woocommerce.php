@@ -1,3 +1,12 @@
+<?php
+defined("ABSPATH") || exit;
+/* Single Product Page */
+if (is_product()) {
+    wc_get_template_part('content', 'single-product');
+    return;
+}
+?>
+
 <?php get_header() ?>
 
 <main class="main">
@@ -20,6 +29,8 @@
         </div>
     </nav>
 
+
+
     <div class="page-content">
         <div class="container">
             <div class="row">
@@ -36,6 +47,8 @@
                             <?php woocommerce_catalog_ordering(); ?>
                         </div>
                     </div>
+
+                    <div class="woocommerce-notices-wrapper"></div>
 
                     <?php
                     $paged = get_query_var('paged') ? get_query_var('paged') : 1;

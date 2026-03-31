@@ -598,6 +598,7 @@ function gebeyashoptheme_add_woocommerce_support()
     add_theme_support('wc-product-gallery-slider');
 
     add_theme_support('post-thumbnails');
+    add_theme_support('title-tag');
 }
 add_action('after_setup_theme', 'gebeyashoptheme_add_woocommerce_support');
 
@@ -634,6 +635,18 @@ remove_action('woocommerce_before_shop_loop', 'woocommerce_result_count', 20);
 // Remove default WooCommerce pagination
 remove_action('woocommerce_after_shop_loop', 'woocommerce_pagination', 10);
 
+
+/**
+ * Adding woocommerce assets
+ */
+function mytheme_enqueue_woocommerce_assets() {
+    if ( class_exists('WooCommerce') ) {
+        wp_enqueue_script('wc-add-to-cart'); // AJAX add to cart
+        wp_enqueue_script('wc-cart-fragments'); // Updates mini-cart
+        wp_enqueue_style('woocommerce-general'); // default WooCommerce styling
+    }
+}
+add_action('wp_enqueue_scripts', 'mytheme_enqueue_woocommerce_assets');
 
 /**
  * Registering Sidebars For Shop Page
@@ -781,3 +794,96 @@ add_action('pre_get_posts', function ($query) {
 
     }
 });
+
+/**
+ * REDIRECT AFTER ADD TO CART
+ */
+function gebeyashoptheme_redirect_after_add_to_cart() {
+    if (isset($_GET['add-to-cart'])) {
+
+        // Remove add-to-cart param and redirect
+        wp_safe_redirect(remove_query_arg('add-to-cart'));
+        exit;
+    }
+}
+add_action('template_redirect', 'gebeyashoptheme_redirect_after_add_to_cart');
+
+
+/**
+ * Delivery and Returns Customizer
+ */
+function gebeyashoptheme_delivery_returns_customizer($wp_customize) {
+
+    $wp_customize->add_section('gebeyashoptheme_delivery_section', array(
+        'title' => __('Delivery & Returns', 'gebeyashoptheme'),
+        'priority' => 160,
+    ));
+
+    // 🔹 Delivery Title
+    $wp_customize->add_setting('gebeyashoptheme_delivery_title', array(
+        'default' => 'Delivery',
+    ));
+
+    $wp_customize->add_control('gebeyashoptheme_delivery_title', array(
+        'label' => __('Delivery Title', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_delivery_section',
+        'type' => 'text',
+    ));
+
+    // 🔹 Delivery Description
+    $wp_customize->add_setting('gebeyashoptheme_delivery_text', array(
+        'default' => '',
+    ));
+
+    $wp_customize->add_control('gebeyashoptheme_delivery_text', array(
+        'label' => __('Delivery Description', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_delivery_section',
+        'type' => 'textarea',
+    ));
+
+    // 🔹 Returns Title
+    $wp_customize->add_setting('gebeyashoptheme_returns_title', array(
+        'default' => 'Returns',
+    ));
+
+    $wp_customize->add_control('gebeyashoptheme_returns_title', array(
+        'label' => __('Returns Title', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_delivery_section',
+        'type' => 'text',
+    ));
+
+    // 🔹 Returns Description
+    $wp_customize->add_setting('gebeyashoptheme_returns_text', array(
+        'default' => '',
+    ));
+
+    $wp_customize->add_control('gebeyashoptheme_returns_text', array(
+        'label' => __('Returns Description', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_delivery_section',
+        'type' => 'textarea',
+    ));
+
+    // 🔹 Delivery Link
+    $wp_customize->add_setting('gebeyashoptheme_delivery_link', array(
+        'default' => '#',
+    ));
+
+    $wp_customize->add_control('gebeyashoptheme_delivery_link', array(
+        'label' => __('Delivery Link', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_delivery_section',
+        'type' => 'url',
+    ));
+
+    // 🔹 Returns Link
+    $wp_customize->add_setting('gebeyashoptheme_returns_link', array(
+        'default' => '#',
+    ));
+
+    $wp_customize->add_control('gebeyashoptheme_returns_link', array(
+        'label' => __('Returns Link', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_delivery_section',
+        'type' => 'url',
+    ));
+}
+
+add_action('customize_register', 'gebeyashoptheme_delivery_returns_customizer');

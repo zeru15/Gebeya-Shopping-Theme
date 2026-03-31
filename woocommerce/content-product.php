@@ -40,7 +40,7 @@ global $product;
                     'btn-cart',
                     $product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
                     'product_type_' . $product->get_type(),
-                    $product->supports('ajax_add_to_cart') ? 'ajax_add_to_cart' : '',
+                    // $product->supports('ajax_add_to_cart') ? 'ajax_add_to_cart' : '',
                 )));
 
                 echo sprintf(
