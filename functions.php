@@ -895,3 +895,141 @@ function gebeyashoptheme_delivery_returns_customizer($wp_customize) {
 }
 
 add_action('customize_register', 'gebeyashoptheme_delivery_returns_customizer');
+
+
+/**
+ * Adding Slider Fields on Customizer Settings
+ */
+function gebeyashoptheme_home_slider_customizer($wp_customize) {
+
+    $wp_customize->add_section('gebeyashoptheme_home_slider', array(
+        'title' => __('Homepage Slider', 'gebeyashoptheme'),
+        'priority' => 30,
+    ));
+
+    $wp_customize->add_setting('gebeyashoptheme_slider', array(
+        'default' => '',
+        'sanitize_callback' => 'gebeyashoptheme_sanitize_repeater',
+    ));
+
+    $wp_customize->add_control(
+        new WP_Customize_Control(
+            $wp_customize,
+            'gebeyashoptheme_slider_control',
+            array(
+                'label' => __('Slides', 'gebeyashoptheme'),
+                'section' => 'gebeyashoptheme_home_slider',
+                'settings' => 'gebeyashoptheme_slider',
+                'type' => 'hidden',
+            )
+        )
+    );
+}
+add_action('customize_register', 'gebeyashoptheme_home_slider_customizer');
+
+function gebeyashoptheme_sanitize_repeater($input) {
+    return wp_kses_post($input);
+}
+
+add_action('customize_controls_print_footer_scripts', function () {
+?>
+<script>
+jQuery(document).ready(function ($) {
+
+    let container = $('<div class="gebeyashoptheme-repeater"></div>');
+    let button = $('<button type="button" class="button button-primary">Add Slide</button>');
+
+    $('#customize-control-gebeyashoptheme_slider_control').append(container).append(button);
+
+    function createItem(data = {}) {
+        let item = $(`
+            <div class="repeater-item" style="border:1px solid #ddd;padding:10px;margin-bottom:10px;">
+                <input type="text" placeholder="Title 1" class="title1" value="${data.title1 || ''}"><br><br>
+                <input type="text" placeholder="Title 2" class="title2" value="${data.title2 || ''}"><br><br>
+                <input type="text" placeholder="Sale Price" class="sale_price" value="${data.sale_price || ''}"><br><br>
+                <input type="text" placeholder="Regular Price" class="regular_price" value="${data.regular_price || ''}"><br><br>
+                <input type="text" placeholder="Shop Link" class="link" value="${data.link || ''}"><br><br>
+
+                <input type="hidden" class="image" value="${data.image || ''}">
+                <button class="upload-image button">Upload Image</button>
+                <div class="image-preview">${data.image ? '<img src="'+data.image+'" style="max-width:100%;margin-top:10px;">' : ''}</div>
+
+                <br><br>
+                <button class="remove button">Remove</button>
+            </div>
+        `);
+
+        // Image upload
+        item.find('.upload-image').on('click', function (e) {
+            e.preventDefault();
+
+            let frame = wp.media({
+                title: 'Select Image',
+                button: { text: 'Use Image' },
+                multiple: false
+            });
+
+            frame.on('select', function () {
+                let attachment = frame.state().get('selection').first().toJSON();
+                item.find('.image').val(attachment.url);
+                item.find('.image-preview').html('<img src="'+attachment.url+'" style="max-width:100%;">');
+                updateValue();
+            });
+
+            frame.open();
+        });
+
+        // Remove
+        item.find('.remove').on('click', function () {
+            item.remove();
+            updateValue();
+        });
+
+        item.find('input').on('keyup change', updateValue);
+
+        return item;
+    }
+
+    function updateValue() {
+        let data = [];
+
+        container.find('.repeater-item').each(function () {
+            let item = $(this);
+
+            data.push({
+                title1: item.find('.title1').val(),
+                title2: item.find('.title2').val(),
+                sale_price: item.find('.sale_price').val(),
+                regular_price: item.find('.regular_price').val(),
+                link: item.find('.link').val(),
+                image: item.find('.image').val()
+            });
+        });
+
+        wp.customize('gebeyashoptheme_slider').set(JSON.stringify(data));
+    }
+
+    // Load existing data
+    let saved = wp.customize('gebeyashoptheme_slider').get();
+    if (saved) {
+        try {
+            JSON.parse(saved).forEach(item => {
+                container.append(createItem(item));
+            });
+        } catch (e) {}
+    }
+
+    // Add new
+    button.on('click', function () {
+        container.append(createItem());
+    });
+
+});
+</script>
+<?php
+});
+
+function gebeyashoptheme_customizer_scripts() {
+    wp_enqueue_media();
+}
+add_action('customize_controls_enqueue_scripts', 'gebeyashoptheme_customizer_scripts');

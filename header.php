@@ -271,7 +271,7 @@
                                 Browse Categories
                             </a>
 
-                            <div class="dropdown-menu">
+                            <div class="dropdown-menu <?php if(is_front_page()) {?> show <?php } ?>">
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
 
