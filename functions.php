@@ -639,8 +639,9 @@ remove_action('woocommerce_after_shop_loop', 'woocommerce_pagination', 10);
 /**
  * Adding woocommerce assets
  */
-function mytheme_enqueue_woocommerce_assets() {
-    if ( class_exists('WooCommerce') ) {
+function mytheme_enqueue_woocommerce_assets()
+{
+    if (class_exists('WooCommerce')) {
         wp_enqueue_script('wc-add-to-cart'); // AJAX add to cart
         wp_enqueue_script('wc-cart-fragments'); // Updates mini-cart
         wp_enqueue_style('woocommerce-general'); // default WooCommerce styling
@@ -798,7 +799,8 @@ add_action('pre_get_posts', function ($query) {
 /**
  * REDIRECT AFTER ADD TO CART
  */
-function gebeyashoptheme_redirect_after_add_to_cart() {
+function gebeyashoptheme_redirect_after_add_to_cart()
+{
     if (isset($_GET['add-to-cart'])) {
 
         // Remove add-to-cart param and redirect
@@ -810,7 +812,8 @@ add_action('template_redirect', 'gebeyashoptheme_redirect_after_add_to_cart');
 
 add_filter('woocommerce_add_to_cart_redirect', 'gebeyashoptheme_remove_add_to_cart_param');
 
-function gebeyashoptheme_remove_add_to_cart_param($url) {
+function gebeyashoptheme_remove_add_to_cart_param($url)
+{
 
     // Redirect to same page WITHOUT query args
     return remove_query_arg('add-to-cart');
@@ -820,7 +823,8 @@ function gebeyashoptheme_remove_add_to_cart_param($url) {
 /**
  * Delivery and Returns Customizer
  */
-function gebeyashoptheme_delivery_returns_customizer($wp_customize) {
+function gebeyashoptheme_delivery_returns_customizer($wp_customize)
+{
 
     $wp_customize->add_section('gebeyashoptheme_delivery_section', array(
         'title' => __('Delivery & Returns', 'gebeyashoptheme'),
@@ -900,7 +904,8 @@ add_action('customize_register', 'gebeyashoptheme_delivery_returns_customizer');
 /**
  * Adding Slider Fields on Customizer Settings
  */
-function gebeyashoptheme_home_slider_customizer($wp_customize) {
+function gebeyashoptheme_home_slider_customizer($wp_customize)
+{
 
     $wp_customize->add_section('gebeyashoptheme_home_slider', array(
         'title' => __('Homepage Slider', 'gebeyashoptheme'),
@@ -927,22 +932,23 @@ function gebeyashoptheme_home_slider_customizer($wp_customize) {
 }
 add_action('customize_register', 'gebeyashoptheme_home_slider_customizer');
 
-function gebeyashoptheme_sanitize_repeater($input) {
+function gebeyashoptheme_sanitize_repeater($input)
+{
     return wp_kses_post($input);
 }
 
 add_action('customize_controls_print_footer_scripts', function () {
-?>
-<script>
-jQuery(document).ready(function ($) {
+    ?>
+    <script>
+        jQuery(document).ready(function ($) {
 
-    let container = $('<div class="gebeyashoptheme-repeater"></div>');
-    let button = $('<button type="button" class="button button-primary">Add Slide</button>');
+            let container = $('<div class="gebeyashoptheme-repeater"></div>');
+            let button = $('<button type="button" class="button button-primary">Add Slide</button>');
 
-    $('#customize-control-gebeyashoptheme_slider_control').append(container).append(button);
+            $('#customize-control-gebeyashoptheme_slider_control').append(container).append(button);
 
-    function createItem(data = {}) {
-        let item = $(`
+            function createItem(data = {}) {
+                let item = $(`
             <div class="repeater-item" style="border:1px solid #ddd;padding:10px;margin-bottom:10px;">
                 <input type="text" placeholder="Title 1" class="title1" value="${data.title1 || ''}"><br><br>
                 <input type="text" placeholder="Title 2" class="title2" value="${data.title2 || ''}"><br><br>
@@ -952,84 +958,187 @@ jQuery(document).ready(function ($) {
 
                 <input type="hidden" class="image" value="${data.image || ''}">
                 <button class="upload-image button">Upload Image</button>
-                <div class="image-preview">${data.image ? '<img src="'+data.image+'" style="max-width:100%;margin-top:10px;">' : ''}</div>
+                <div class="image-preview">${data.image ? '<img src="' + data.image + '" style="max-width:100%;margin-top:10px;">' : ''}</div>
 
                 <br><br>
                 <button class="remove button">Remove</button>
             </div>
         `);
 
-        // Image upload
-        item.find('.upload-image').on('click', function (e) {
-            e.preventDefault();
+                // Image upload
+                item.find('.upload-image').on('click', function (e) {
+                    e.preventDefault();
 
-            let frame = wp.media({
-                title: 'Select Image',
-                button: { text: 'Use Image' },
-                multiple: false
+                    let frame = wp.media({
+                        title: 'Select Image',
+                        button: { text: 'Use Image' },
+                        multiple: false
+                    });
+
+                    frame.on('select', function () {
+                        let attachment = frame.state().get('selection').first().toJSON();
+                        item.find('.image').val(attachment.url);
+                        item.find('.image-preview').html('<img src="' + attachment.url + '" style="max-width:100%;">');
+                        updateValue();
+                    });
+
+                    frame.open();
+                });
+
+                // Remove
+                item.find('.remove').on('click', function () {
+                    item.remove();
+                    updateValue();
+                });
+
+                item.find('input').on('keyup change', updateValue);
+
+                return item;
+            }
+
+            function updateValue() {
+                let data = [];
+
+                container.find('.repeater-item').each(function () {
+                    let item = $(this);
+
+                    data.push({
+                        title1: item.find('.title1').val(),
+                        title2: item.find('.title2').val(),
+                        sale_price: item.find('.sale_price').val(),
+                        regular_price: item.find('.regular_price').val(),
+                        link: item.find('.link').val(),
+                        image: item.find('.image').val()
+                    });
+                });
+
+                wp.customize('gebeyashoptheme_slider').set(JSON.stringify(data));
+            }
+
+            // Load existing data
+            let saved = wp.customize('gebeyashoptheme_slider').get();
+            if (saved) {
+                try {
+                    JSON.parse(saved).forEach(item => {
+                        container.append(createItem(item));
+                    });
+                } catch (e) { }
+            }
+
+            // Add new
+            button.on('click', function () {
+                container.append(createItem());
             });
 
-            frame.on('select', function () {
-                let attachment = frame.state().get('selection').first().toJSON();
-                item.find('.image').val(attachment.url);
-                item.find('.image-preview').html('<img src="'+attachment.url+'" style="max-width:100%;">');
-                updateValue();
-            });
-
-            frame.open();
         });
-
-        // Remove
-        item.find('.remove').on('click', function () {
-            item.remove();
-            updateValue();
-        });
-
-        item.find('input').on('keyup change', updateValue);
-
-        return item;
-    }
-
-    function updateValue() {
-        let data = [];
-
-        container.find('.repeater-item').each(function () {
-            let item = $(this);
-
-            data.push({
-                title1: item.find('.title1').val(),
-                title2: item.find('.title2').val(),
-                sale_price: item.find('.sale_price').val(),
-                regular_price: item.find('.regular_price').val(),
-                link: item.find('.link').val(),
-                image: item.find('.image').val()
-            });
-        });
-
-        wp.customize('gebeyashoptheme_slider').set(JSON.stringify(data));
-    }
-
-    // Load existing data
-    let saved = wp.customize('gebeyashoptheme_slider').get();
-    if (saved) {
-        try {
-            JSON.parse(saved).forEach(item => {
-                container.append(createItem(item));
-            });
-        } catch (e) {}
-    }
-
-    // Add new
-    button.on('click', function () {
-        container.append(createItem());
-    });
-
+    </script>
+    <?php
 });
-</script>
-<?php
-});
 
-function gebeyashoptheme_customizer_scripts() {
+function gebeyashoptheme_customizer_scripts()
+{
     wp_enqueue_media();
 }
 add_action('customize_controls_enqueue_scripts', 'gebeyashoptheme_customizer_scripts');
+
+
+/**
+ * Adding Categories on Customizer Settings
+ */
+function gebeyashoptheme_home_categories_customizer($wp_customize) {
+
+    // Section
+    $wp_customize->add_section('gebeyashoptheme_home_categories', array(
+        'title'    => __('Homepage Categories', 'gebeyashoptheme'),
+        'priority' => 35,
+    ));
+
+    // Setting
+    $wp_customize->add_setting('gebeyashoptheme_selected_categories', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    // Get categories
+    $categories = get_terms(array(
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => false,
+    ));
+
+    ob_start();
+    ?>
+
+    <input type="text" id="gebeya-cat-search" placeholder="Search categories..." style="width:100%; margin-bottom:10px;">
+
+    <div id="gebeya-cat-list" style="max-height:200px; overflow:auto; border:1px solid #ddd; padding:10px;">
+
+        <?php foreach ($categories as $cat): ?>
+            <label style="display:block;">
+                <input type="checkbox" class="gebeya-cat-checkbox" value="<?php echo esc_attr($cat->term_id); ?>">
+                <?php echo esc_html($cat->name); ?>
+            </label>
+        <?php endforeach; ?>
+
+    </div>
+
+    <script>
+    (function() {
+
+        const limit = 6;
+        const checkboxes = document.querySelectorAll('.gebeya-cat-checkbox');
+        const search = document.getElementById('gebeya-cat-search');
+        const input = document.querySelector('[data-customize-setting-link="gebeyashoptheme_selected_categories"]');
+
+        function updateSelection() {
+            let selected = [];
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) selected.push(cb.value);
+            });
+
+            // Save to Customizer
+            if (input) {
+                input.value = selected.join(',');
+                input.dispatchEvent(new Event('change'));
+            }
+
+            // Disable others if limit reached
+            checkboxes.forEach(cb => {
+                if (!cb.checked) {
+                    cb.disabled = selected.length >= limit;
+                    cb.parentElement.style.opacity = selected.length >= limit ? '0.5' : '1';
+                } else {
+                    cb.disabled = false;
+                    cb.parentElement.style.opacity = '1';
+                }
+            });
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateSelection);
+        });
+
+        // Search filter
+        search.addEventListener('keyup', function() {
+            const value = this.value.toLowerCase();
+
+            checkboxes.forEach(cb => {
+                const text = cb.parentElement.textContent.toLowerCase();
+                cb.parentElement.style.display = text.includes(value) ? 'block' : 'none';
+            });
+        });
+
+    })();
+    </script>
+
+    <?php
+
+    $wp_customize->add_control('gebeyashoptheme_categories_ui', array(
+        'label'       => __('Select up to 6 categories', 'gebeyashoptheme'),
+        'section'     => 'gebeyashoptheme_home_categories',
+        'settings'    => 'gebeyashoptheme_selected_categories',
+        'type'        => 'hidden',
+        'description' => ob_get_clean(),
+    ));
+}
+add_action('customize_register', 'gebeyashoptheme_home_categories_customizer');

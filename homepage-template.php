@@ -87,91 +87,59 @@ get_header();
 
     <div class="mb-4"></div><!-- End .mb-2 -->
 
-    <div class="container">
-        <h2 class="title text-center mb-2">Explore Popular Categories</h2><!-- End .title -->
+    <?php
+    $selected = get_theme_mod('gebeyashoptheme_selected_categories');
 
-        <div class="cat-blocks-container">
-            <div class="row">
-                <div class="col-6 col-sm-4 col-lg-2">
-                    <a href="category.html" class="cat-block">
-                        <figure>
-                            <span>
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/cats/1.jpg"
-                                    alt="Category image">
-                            </span>
-                        </figure>
+    if ($selected):
 
-                        <h3 class="cat-block-title">Computer & Laptop</h3><!-- End .cat-block-title -->
-                    </a>
-                </div><!-- End .col-sm-4 col-lg-2 -->
+        $category_ids = explode(',', $selected);
 
-                <div class="col-6 col-sm-4 col-lg-2">
-                    <a href="category.html" class="cat-block">
-                        <figure>
-                            <span>
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/cats/2.jpg"
-                                    alt="Category image">
-                            </span>
-                        </figure>
+        $categories = get_terms(array(
+            'taxonomy' => 'product_cat',
+            'include' => $category_ids,
+            'orderby' => 'include',
+            'hide_empty' => false,
+        ));
+        ?>
 
-                        <h3 class="cat-block-title">Lighting</h3><!-- End .cat-block-title -->
-                    </a>
-                </div><!-- End .col-sm-4 col-lg-2 -->
+        <div class="container">
+            <h2 class="title text-center mb-2"><?php _e('Explore Popular Categories', 'gebeyashoptheme'); ?></h2>
 
-                <div class="col-6 col-sm-4 col-lg-2">
-                    <a href="category.html" class="cat-block">
-                        <figure>
-                            <span>
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/cats/3.jpg"
-                                    alt="Category image">
-                            </span>
-                        </figure>
+            <div class="cat-blocks-container">
+                <div class="row">
 
-                        <h3 class="cat-block-title">Smart Phones</h3><!-- End .cat-block-title -->
-                    </a>
-                </div><!-- End .col-sm-4 col-lg-2 -->
+                    <?php foreach ($categories as $category):
 
-                <div class="col-6 col-sm-4 col-lg-2">
-                    <a href="category.html" class="cat-block">
-                        <figure>
-                            <span>
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/cats/4.jpg"
-                                    alt="Category image">
-                            </span>
-                        </figure>
+                        $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
+                        $image = wp_get_attachment_url($thumbnail_id);
 
-                        <h3 class="cat-block-title">Televisions</h3><!-- End .cat-block-title -->
-                    </a>
-                </div><!-- End .col-sm-4 col-lg-2 -->
+                        if (!$image) {
+                            $image = wc_placeholder_img_src();
+                        }
+                        ?>
 
-                <div class="col-6 col-sm-4 col-lg-2">
-                    <a href="category.html" class="cat-block">
-                        <figure>
-                            <span>
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/cats/5.jpg"
-                                    alt="Category image">
-                            </span>
-                        </figure>
+                        <div class="col-6 col-sm-4 col-lg-2">
+                            <a href="<?php echo esc_url(get_term_link($category)); ?>" class="cat-block">
+                                <figure>
+                                    <span>
+                                        <img src="<?php echo esc_url($image); ?>"
+                                            alt="<?php echo esc_attr($category->name); ?>">
+                                    </span>
+                                </figure>
 
-                        <h3 class="cat-block-title">Cooking</h3><!-- End .cat-block-title -->
-                    </a>
-                </div><!-- End .col-sm-4 col-lg-2 -->
+                                <h3 class="cat-block-title">
+                                    <?php echo esc_html($category->name); ?>
+                                </h3>
+                            </a>
+                        </div>
 
-                <div class="col-6 col-sm-4 col-lg-2">
-                    <a href="category.html" class="cat-block">
-                        <figure>
-                            <span>
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/cats/6.jpg"
-                                    alt="Category image">
-                            </span>
-                        </figure>
+                    <?php endforeach; ?>
 
-                        <h3 class="cat-block-title">Furniture</h3><!-- End .cat-block-title -->
-                    </a>
-                </div><!-- End .col-sm-4 col-lg-2 -->
-            </div><!-- End .row -->
-        </div><!-- End .cat-blocks-container -->
-    </div><!-- End .container -->
+                </div>
+            </div>
+        </div>
+
+    <?php endif; ?><!-- End .container -->
 
     <div class="mb-2"></div><!-- End .mb-2 -->
 
