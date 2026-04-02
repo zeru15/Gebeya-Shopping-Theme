@@ -143,21 +143,64 @@ get_header();
 
     <div class="mb-2"></div><!-- End .mb-2 -->
 
+
+    <?php
+
+    // Banner 1
+    $banner1_title1 = get_theme_mod('gebeyashoptheme_banner1_title1');
+    $banner1_title2 = get_theme_mod('gebeyashoptheme_banner1_title2');
+    $banner1_title3 = get_theme_mod('gebeyashoptheme_banner1_title3');
+    $banner1_btn_link = get_theme_mod('gebeyashoptheme_banner1_button_link');
+    $banner1_btn_text = get_theme_mod('gebeyashoptheme_banner1_button_text');
+    $banner1_image = get_theme_mod('gebeyashoptheme_banner1_image');
+
+    // Banner 2
+    $banner2_title1 = get_theme_mod('gebeyashoptheme_banner2_title1');
+    $banner2_title2 = get_theme_mod('gebeyashoptheme_banner2_title2');
+    $banner2_title3 = get_theme_mod('gebeyashoptheme_banner2_title3');
+    $banner2_btn_link = get_theme_mod('gebeyashoptheme_banner2_button_link');
+    $banner2_btn_text = get_theme_mod('gebeyashoptheme_banner2_button_text');
+    $banner2_image = get_theme_mod('gebeyashoptheme_banner2_image');
+
+    // Banner 3
+    $banner3_title1 = get_theme_mod('gebeyashoptheme_banner3_title1');
+    $banner3_title2 = get_theme_mod('gebeyashoptheme_banner3_title2');
+    $banner3_title3 = get_theme_mod('gebeyashoptheme_banner3_title3');
+    $banner3_btn_link = get_theme_mod('gebeyashoptheme_banner3_button_link');
+    $banner3_btn_text = get_theme_mod('gebeyashoptheme_banner3_button_text');
+    $banner3_image = get_theme_mod('gebeyashoptheme_banner3_image');
+
+    // Banner 4
+    $banner4_title1 = get_theme_mod('gebeyashoptheme_banner4_title1');
+    $banner4_title2 = get_theme_mod('gebeyashoptheme_banner4_title2');
+    $banner4_title3 = get_theme_mod('gebeyashoptheme_banner4_title3');
+    $banner4_btn_link = get_theme_mod('gebeyashoptheme_banner4_button_link');
+    $banner4_btn_text = get_theme_mod('gebeyashoptheme_banner4_button_text');
+    $banner4_image = get_theme_mod('gebeyashoptheme_banner4_image');
+
+    // Banner 5
+    $banner5_title1 = get_theme_mod('gebeyashoptheme_banner5_title1');
+    $banner5_title2 = get_theme_mod('gebeyashoptheme_banner5_title2');
+    $banner5_title3 = get_theme_mod('gebeyashoptheme_banner5_title3');
+    $banner5_btn_link = get_theme_mod('gebeyashoptheme_banner5_button_link');
+    $banner5_btn_text = get_theme_mod('gebeyashoptheme_banner5_button_text');
+    $banner5_image = get_theme_mod('gebeyashoptheme_banner5_image');
+    ?>
+
     <div class="container">
         <div class="row">
             <div class="col-sm-6 col-lg-3">
                 <div class="banner banner-overlay">
                     <a href="#">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/banners/banner-1.jpg"
+                        <img src="<?php echo esc_url($banner1_image) ?>"
                             alt="Banner">
                     </a>
 
                     <div class="banner-content">
-                        <h4 class="banner-subtitle text-white"><a href="#">Weekend Sale</a></h4>
+                        <h4 class="banner-subtitle text-white"><a href="#"><?php echo $banner1_title1 ?></a></h4>
                         <!-- End .banner-subtitle -->
-                        <h3 class="banner-title text-white"><a href="#">Lighting <br>& Accessories <br><span>25%
-                                    off</span></a></h3><!-- End .banner-title -->
-                        <a href="#" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a>
+                        <h3 class="banner-title text-white"><a href="#"><?php echo $banner1_title2 ?><br><span><?php echo $banner1_title3 ?></span></a></h3><!-- End .banner-title -->
+                        <a href="<?php echo esc_url($banner1_btn_link) ?>" class="banner-link"><?php echo $banner1_btn_text ?><i class="icon-long-arrow-right"></i></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
             </div><!-- End .col-lg-3 -->
@@ -165,16 +208,15 @@ get_header();
             <div class="col-sm-6 col-lg-3 order-lg-last">
                 <div class="banner banner-overlay">
                     <a href="#">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/banners/banner-3.jpg"
+                        <img src="<?php echo esc_url($banner2_image) ?>"
                             alt="Banner">
                     </a>
 
                     <div class="banner-content">
-                        <h4 class="banner-subtitle text-white"><a href="#">Smart Offer</a></h4>
+                        <h4 class="banner-subtitle text-white"><a href="#"><?php echo esc_url($banner2_title1) ?></a></h4>
                         <!-- End .banner-subtitle -->
-                        <h3 class="banner-title text-white"><a href="#">Anniversary <br>Special <br><span>15%
-                                    off</span></a></h3><!-- End .banner-title -->
-                        <a href="#" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a>
+                        <h3 class="banner-title text-white"><a href="#"><?php echo $banner2_title1 ?><br><span><?php echo $banner2_title3 ?></span></a></h3><!-- End .banner-title -->
+                        <a href="<?php echo  esc_url($banner2_btn_link) ?>" class="banner-link"><?php echo $banner2_btn_text ?><i class="icon-long-arrow-right"></i></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
             </div><!-- End .col-lg-3 -->
@@ -182,16 +224,16 @@ get_header();
             <div class="col-lg-6">
                 <div class="banner banner-overlay">
                     <a href="#">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/banners/banner-2.jpg"
+                        <img src="<?php echo esc_url($banner3_image) ?>"
                             alt="Banner">
                     </a>
 
                     <div class="banner-content">
-                        <h4 class="banner-subtitle text-white d-none d-sm-block"><a href="#">Amazing Value</a></h4>
+                        <h4 class="banner-subtitle text-white d-none d-sm-block"><a href="#"><?php echo $banner3_title1 ?></a></h4>
                         <!-- End .banner-subtitle -->
-                        <h3 class="banner-title text-white"><a href="#">Clothes Trending <br>Spring Collection 2019
-                                <br><span>from $12,99</span></a></h3><!-- End .banner-title -->
-                        <a href="#" class="banner-link">Discover Now <i class="icon-long-arrow-right"></i></a>
+                        <h3 class="banner-title text-white"><a href="#"><?php echo $banner3_title2 ?>
+                                <br><span><?php echo $banner3_title3 ?></span></a></h3><!-- End .banner-title -->
+                        <a href="<?php echo esc_url($banner3_btn_link) ?>" class="banner-link"><?php echo $banner3_btn_text ?><i class="icon-long-arrow-right"></i></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
             </div><!-- End .col-lg-6 -->
@@ -2317,16 +2359,16 @@ get_header();
             <div class="col-lg-6">
                 <div class="banner banner-overlay banner-overlay-light">
                     <a href="#">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/banners/banner-4.jpg"
+                        <img src="<?php echo esc_url($banner4_image) ?>"
                             alt="Banner">
                     </a>
 
                     <div class="banner-content">
-                        <h4 class="banner-subtitle d-none d-sm-block"><a href="#">Spring Sale is Coming</a></h4>
+                        <h4 class="banner-subtitle d-none d-sm-block"><a href="#"><?php echo $banner4_title1 ?></a></h4>
                         <!-- End .banner-subtitle -->
-                        <h3 class="banner-title"><a href="#">All Smart Watches <br>Discount <br><span
-                                    class="text-primary">15% off</span></a></h3><!-- End .banner-title -->
-                        <a href="#" class="banner-link banner-link-dark">Discover Now <i
+                        <h3 class="banner-title"><a href="#"><?php echo $banner4_title2 ?><br><span
+                                    class="text-primary"><?php echo $banner4_title3 ?></span></a></h3><!-- End .banner-title -->
+                        <a href="<?php echo esc_url($banner4_btn_link) ?>" class="banner-link banner-link-dark"><?php echo $banner4_btn_text ?><i
                                 class="icon-long-arrow-right"></i></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
@@ -2335,16 +2377,16 @@ get_header();
             <div class="col-lg-6">
                 <div class="banner banner-overlay">
                     <a href="#">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/banners/banner-5.png"
+                        <img src="<?php echo esc_url($banner5_image) ?>"
                             alt="Banner">
                     </a>
 
                     <div class="banner-content">
-                        <h4 class="banner-subtitle text-white  d-none d-sm-block"><a href="#">Amazing Value</a></h4>
+                        <h4 class="banner-subtitle text-white  d-none d-sm-block"><a href="#"><?php echo $banner5_title1 ?></a></h4>
                         <!-- End .banner-subtitle -->
-                        <h3 class="banner-title text-white"><a href="#">Headphones Trending <br>JBL Harman
-                                <br><span>from $59,99</span></a></h3><!-- End .banner-title -->
-                        <a href="#" class="banner-link">Discover Now <i class="icon-long-arrow-right"></i></a>
+                        <h3 class="banner-title text-white"><a href="#"><?php echo $banner5_title2 ?>
+                                <br><span><?php echo $banner5_title3 ?></span></a></h3><!-- End .banner-title -->
+                        <a href="<?php echo esc_url($banner5_btn_link) ?>" class="banner-link"><?php echo $banner5_btn_text ?><i class="icon-long-arrow-right"></i></a>
                     </div><!-- End .banner-content -->
                 </div><!-- End .banner -->
             </div><!-- End .col-lg-6 -->

@@ -1142,3 +1142,89 @@ function gebeyashoptheme_home_categories_customizer($wp_customize) {
     ));
 }
 add_action('customize_register', 'gebeyashoptheme_home_categories_customizer');
+
+
+/**
+ * Homepage Banner Customizer Setting
+ */
+function gebeyashoptheme_home_banners_customizer($wp_customize) {
+
+    $wp_customize->add_section('gebeyashoptheme_home_banners', array(
+        'title'    => __('Homepage Banners', 'gebeyashoptheme'),
+        'priority' => 40,
+    ));
+
+    // Loop for 5 banners
+    for ($i = 1; $i <= 5; $i++) {
+
+        // Title 1
+        $wp_customize->add_setting("gebeyashoptheme_banner{$i}_title1", array(
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
+
+        $wp_customize->add_control("gebeyashoptheme_banner{$i}_title1", array(
+            'label'   => __("Banner {$i} - Title 1", 'gebeyashoptheme'),
+            'section' => 'gebeyashoptheme_home_banners',
+            'type'    => 'text',
+        ));
+
+        // Title 2
+        $wp_customize->add_setting("gebeyashoptheme_banner{$i}_title2", array(
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
+
+        $wp_customize->add_control("gebeyashoptheme_banner{$i}_title2", array(
+            'label'   => __("Banner {$i} - Title 2", 'gebeyashoptheme'),
+            'section' => 'gebeyashoptheme_home_banners',
+            'type'    => 'text',
+        ));
+
+        // Title 3
+        $wp_customize->add_setting("gebeyashoptheme_banner{$i}_title3", array(
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
+
+        $wp_customize->add_control("gebeyashoptheme_banner{$i}_title3", array(
+            'label'   => __("Banner {$i} - Title 3", 'gebeyashoptheme'),
+            'section' => 'gebeyashoptheme_home_banners',
+            'type'    => 'text',
+        ));
+
+        // Button Link
+        $wp_customize->add_setting("gebeyashoptheme_banner{$i}_button_link", array(
+            'sanitize_callback' => 'esc_url_raw',
+        ));
+
+        $wp_customize->add_control("gebeyashoptheme_banner{$i}_button_link", array(
+            'label'   => __("Banner {$i} - Button Link", 'gebeyashoptheme'),
+            'section' => 'gebeyashoptheme_home_banners',
+            'type'    => 'url',
+        ));
+
+        // Button Text
+        $wp_customize->add_setting("gebeyashoptheme_banner{$i}_button_text", array(
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
+
+        $wp_customize->add_control("gebeyashoptheme_banner{$i}_button_text", array(
+            'label'   => __("Banner {$i} - Button Text", 'gebeyashoptheme'),
+            'section' => 'gebeyashoptheme_home_banners',
+            'type'    => 'text',
+        ));
+
+        // Image
+        $wp_customize->add_setting("gebeyashoptheme_banner{$i}_image", array(
+            'sanitize_callback' => 'esc_url_raw',
+        ));
+
+        $wp_customize->add_control(new WP_Customize_Image_Control(
+            $wp_customize,
+            "gebeyashoptheme_banner{$i}_image",
+            array(
+                'label'   => __("Banner {$i} - Image", 'gebeyashoptheme'),
+                'section' => 'gebeyashoptheme_home_banners',
+            )
+        ));
+    }
+}
+add_action('customize_register', 'gebeyashoptheme_home_banners_customizer');
