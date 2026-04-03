@@ -1228,3 +1228,109 @@ function gebeyashoptheme_home_banners_customizer($wp_customize) {
     }
 }
 add_action('customize_register', 'gebeyashoptheme_home_banners_customizer');
+
+
+/**
+ * Adding Hot Deals on Customizer Settings
+ */
+function gebeyashoptheme_hot_deals_customizer($wp_customize) {
+
+    $wp_customize->add_section('gebeyashoptheme_hot_deals', array(
+        'title' => __('Homepage Hot Deals', 'gebeyashoptheme'),
+        'priority' => 36,
+    ));
+
+    $wp_customize->add_setting('gebeyashoptheme_hot_deals_categories', array(
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    // Custom Control Class
+    class Gebeya_Hot_Deals_Control extends WP_Customize_Control {
+
+        public function render_content() {
+
+            $categories = get_terms([
+                'taxonomy' => 'product_cat',
+                'hide_empty' => false,
+            ]);
+
+            $saved = explode(',', $this->value());
+
+            ?>
+            <label><strong><?php _e('Select Categories (Max: 5)', 'gebeyashoptheme'); ?></strong></label>
+
+            <!-- Search -->
+            <input type="text" id="hotDealsSearch" placeholder="Search category..."
+                   style="width:100%;margin-bottom:10px;padding:6px;">
+
+            <div id="hotDealsList" style="max-height:200px; overflow:auto; border:1px solid #ddd; padding:10px;">
+                <?php foreach ($categories as $cat): ?>
+                    <label style="display:block;">
+                        <input type="checkbox"
+                               value="<?php echo $cat->term_id; ?>"
+                               <?php checked(in_array($cat->term_id, $saved)); ?>>
+                        <?php echo $cat->name; ?>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+
+            <input type="hidden" <?php $this->link(); ?> id="hotDealsOutput">
+
+            <!-- JS -->
+            <script>
+                (function () {
+                    const checkboxes = document.querySelectorAll('#hotDealsList input[type="checkbox"]');
+                    const output = document.getElementById('hotDealsOutput');
+
+                    function update() {
+                        let selected = [];
+                        checkboxes.forEach(cb => {
+                            if (cb.checked) selected.push(cb.value);
+                        });
+
+                        // LIMIT TO 5
+                        if (selected.length > 5) {
+                            this.checked = false;
+                            return;
+                        }
+
+                        output.value = selected.join(',');
+                        output.dispatchEvent(new Event('change'));
+
+                        // Grey out if limit reached
+                        checkboxes.forEach(cb => {
+                            if (!cb.checked) {
+                                cb.disabled = selected.length >= 5;
+                                cb.parentNode.style.opacity = selected.length >= 5 ? '0.5' : '1';
+                            }
+                        });
+                    }
+
+                    checkboxes.forEach(cb => cb.addEventListener('change', update));
+
+                    // Search filter
+                    document.getElementById('hotDealsSearch').addEventListener('keyup', function () {
+                        let val = this.value.toLowerCase();
+                        document.querySelectorAll('#hotDealsList label').forEach(label => {
+                            label.style.display = label.textContent.toLowerCase().includes(val) ? 'block' : 'none';
+                        });
+                    });
+
+                    update();
+                })();
+            </script>
+            <?php
+        }
+    }
+
+    $wp_customize->add_control(new Gebeya_Hot_Deals_Control(
+        $wp_customize,
+        'gebeyashoptheme_hot_deals_control',
+        array(
+            'section' => 'gebeyashoptheme_hot_deals',
+            'settings' => 'gebeyashoptheme_hot_deals_categories',
+        )
+    ));
+}
+add_action('customize_register', 'gebeyashoptheme_hot_deals_customizer');
