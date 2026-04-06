@@ -548,728 +548,218 @@ get_header();
     <div class="mb-3"></div><!-- End .mb-3 -->
 
     <div class="container electronics">
+        <?php
+    $section_title = get_theme_mod('gebeyashoptheme_home_category1_title');
+    $raw_ids = get_theme_mod('gebeyashoptheme_home_category1_categories');
+    $category_ids = array_filter(array_map('intval', explode(',', $raw_ids)));
+    ?>
         <div class="heading heading-flex heading-border mb-3">
             <div class="heading-left">
-                <h2 class="title">Electronics</h2><!-- End .title -->
-            </div><!-- End .heading-left -->
+                <h2 class="title"><?php echo esc_html($section_title ? $section_title : 'Category'); ?></h2>
+            </div>
 
             <div class="heading-right">
                 <ul class="nav nav-pills nav-border-anim justify-content-center" role="tablist">
+
+                    <!-- ALL TAB -->
                     <li class="nav-item">
-                        <a class="nav-link active" id="elec-new-link" data-toggle="tab" href="#elec-new-tab" role="tab"
-                            aria-controls="elec-new-tab" aria-selected="true">New</a>
+                        <a class="nav-link active" id="cat1-all-link" data-toggle="tab" href="#cat1-all-tab" role="tab">
+                            All
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="elec-featured-link" data-toggle="tab" href="#elec-featured-tab"
-                            role="tab" aria-controls="elec-featured-tab" aria-selected="false">Featured</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="elec-best-link" data-toggle="tab" href="#elec-best-tab" role="tab"
-                            aria-controls="elec-best-tab" aria-selected="false">Best Seller</a>
-                    </li>
+
+                    <!-- CATEGORY TABS -->
+                    <?php if (!empty($category_ids)): ?>
+                        <?php foreach ($category_ids as $cat_id):
+                            $term = get_term($cat_id, 'product_cat');
+                            if (is_wp_error($term) || !$term)
+                                continue;
+                            ?>
+                            <li class="nav-item">
+                                <a class="nav-link" id="cat1-<?php echo $cat_id; ?>-link" data-toggle="tab"
+                                    href="#cat1-<?php echo $cat_id; ?>-tab" role="tab">
+                                    <?php echo esc_html($term->name); ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
                 </ul>
-            </div><!-- End .heading-right -->
-        </div><!-- End .heading -->
+            </div>
+        </div>
 
         <div class="tab-content tab-content-carousel">
-            <div class="tab-pane p-0 fade show active" id="elec-new-tab" role="tabpanel"
-                aria-labelledby="elec-new-link">
+
+            <!-- ALL PRODUCTS TAB -->
+            <div class="tab-pane p-0 fade show active" id="cat1-all-tab" role="tabpanel">
                 <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
-                    data-owl-options='{
-                                "nav": false, 
-                                "dots": true,
-                                "margin": 20,
-                                "loop": false,
-                                "responsive": {
-                                    "0": {
-                                        "items":2
-                                    },
-                                    "480": {
-                                        "items":2
-                                    },
-                                    "768": {
-                                        "items":3
-                                    },
-                                    "992": {
-                                        "items":4
-                                    },
-                                    "1280": {
-                                        "items":5,
-                                        "nav": true
-                                    }
-                                }
-                            }'>
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-new">New</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-6.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
+                    data-owl-options='{"nav":false,"dots":true,"margin":20,"loop":false,"responsive":{"0":{"items":2},"480":{"items":2},"768":{"items":3},"992":{"items":4},"1280":{"items":5,"nav":true}}}'>
 
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
+                    <?php
+                    $args = [
+                        'post_type' => 'product',
+                        'posts_per_page' => 10,
+                    ];
 
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
+                    // Only apply category filter IF categories exist
+                    if (!empty($category_ids)) {
+                        $args['tax_query'] = [
+                            [
+                                'taxonomy' => 'product_cat',
+                                'field' => 'term_id',
+                                'terms' => $category_ids,
+                            ]
+                        ];
+                    }
 
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Appliances</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Neato Robotics</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $399.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 12 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
+                    $query = new WP_Query($args);
 
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-top">Top</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-7.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
+                    if ($query->have_posts()):
+                        while ($query->have_posts()):
+                            $query->the_post();
+                            global $product;
+                            ?>
 
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
+                            <div class="product">
+                                <figure class="product-media">
+                                    <a href="<?php the_permalink(); ?>">
+                                        <?php echo woocommerce_get_product_thumbnail(); ?>
+                                    </a>
 
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
+                                    <div class="product-action-vertical">
+                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
+                                                wishlist</span></a>
+                                        <a href="#" class="btn-product-icon btn-compare"><span>Compare</span></a>
+                                        <a href="#" class="btn-product-icon btn-quickview"><span>Quick view</span></a>
+                                    </div>
 
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Laptops</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">MacBook Pro 13" Display, i5</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $1,199.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
+                                    <div class="product-action">
+                                        <a href="<?php echo esc_url($product->add_to_cart_url()); ?>"
+                                            class="btn-product btn-cart" title="Add to cart">
+                                            <span><?php echo esc_html($product->add_to_cart_text()); ?></span>
+                                        </a>
+                                    </div>
+                                </figure>
 
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-8.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
+                                <div class="product-body">
+                                    <div class="product-cat">
+                                        <?php echo wc_get_product_category_list($product->get_id()); ?>
+                                    </div>
 
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
+                                    <h3 class="product-title">
+                                        <a href="<?php the_permalink(); ?>">
+                                            <?php
+                                            $title = get_the_title();
+                                            $words = explode(' ', $title);
+                                            if (count($words) > 7) {
+                                                $title = implode(' ', array_slice($words, 0, 7)) . '...';
+                                            }
+                                            echo esc_html($title);
+                                            ?>
+                                        </a>
+                                    </h3>
 
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
+                                    <div class="product-price">
+                                        <?php echo $product->get_price_html(); ?>
+                                    </div>
 
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Audio</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Bose - SoundLink Bluetooth Speaker</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $79.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 6 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
+                                    <div class="ratings-container">
+                                        <div class="ratings">
+                                            <div class="ratings-val"
+                                                style="width: <?php echo ($product->get_average_rating() / 5) * 100; ?>%;">
+                                            </div>
+                                        </div>
+                                        <span class="ratings-text">(<?php echo $product->get_review_count(); ?> Reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-new">New</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-9.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
+                        <?php endwhile;
+                        wp_reset_postdata();
+                    endif; ?>
 
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
+                </div>
+            </div>
 
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
+            <!-- CATEGORY TABS CONTENT -->
+            <?php foreach ($category_ids as $cat_id):
+                $term = get_term($cat_id, 'product_cat');
+                if (!$term)
+                    continue;
+                ?>
 
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Tablets</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Apple - 11 Inch iPad Pro with Wi-Fi 256GB
-                                </a></h3><!-- End .product-title -->
-                            <div class="product-price">
-                                $899.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
+                <div class="tab-pane p-0 fade" id="cat1-<?php echo $cat_id; ?>-tab" role="tabpanel">
+                    <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
+                        data-owl-options='{"nav":false,"dots":true,"margin":20,"loop":false,"responsive":{"0":{"items":2},"480":{"items":2},"768":{"items":3},"992":{"items":4},"1280":{"items":5,"nav":true}}}'>
 
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #edd2c8;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                                <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
+                        <?php
+                        $args = [
+                            'post_type' => 'product',
+                            'posts_per_page' => 10,
+                            'tax_query' => [
+                                [
+                                    'taxonomy' => 'product_cat',
+                                    'field' => 'term_id',
+                                    'terms' => $cat_id,
+                                ]
+                            ]
+                        ];
+                        $query = new WP_Query($args);
 
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-10.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
+                        if ($query->have_posts()):
+                            while ($query->have_posts()):
+                                $query->the_post();
+                                global $product;
+                                ?>
 
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
+                                <div class="product">
+                                    <figure class="product-media">
+                                        <a href="<?php the_permalink(); ?>">
+                                            <?php echo woocommerce_get_product_thumbnail(); ?>
+                                        </a>
 
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
+                                        <div class="product-action">
+                                            <a href="<?php echo esc_url($product->add_to_cart_url()); ?>"
+                                                class="btn-product btn-cart">
+                                                <span><?php echo esc_html($product->add_to_cart_text()); ?></span>
+                                            </a>
+                                        </div>
+                                    </figure>
 
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Cell Phone</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Google - Pixel 3 XL 128GB</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                <span class="new-price">$350.00</span>
-                                <span class="old-price">Was $410.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 10 Reviews )</span>
-                            </div><!-- End .rating-container -->
+                                    <div class="product-body">
+                                        <div class="product-cat">
+                                            <?php echo wc_get_product_category_list($product->get_id()); ?>
+                                        </div>
 
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #333333;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-                </div><!-- End .owl-carousel -->
-            </div><!-- .End .tab-pane -->
-            <div class="tab-pane p-0 fade" id="elec-featured-tab" role="tabpanel" aria-labelledby="elec-featured-link">
-                <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
-                    data-owl-options='{
-                                "nav": false, 
-                                "dots": true,
-                                "margin": 20,
-                                "loop": false,
-                                "responsive": {
-                                    "0": {
-                                        "items":2
-                                    },
-                                    "480": {
-                                        "items":2
-                                    },
-                                    "768": {
-                                        "items":3
-                                    },
-                                    "992": {
-                                        "items":4
-                                    },
-                                    "1280": {
-                                        "items":5,
-                                        "nav": true
-                                    }
-                                }
-                            }'>
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-new">New</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-9.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
+                                        <h3 class="product-title">
+                                            <a href="<?php the_permalink(); ?>">
+                                                <?php
+                                                $title = get_the_title();
+                                                $words = explode(' ', $title);
+                                                if (count($words) > 7) {
+                                                    $title = implode(' ', array_slice($words, 0, 7)) . '...';
+                                                }
+                                                echo esc_html($title);
+                                                ?>
+                                            </a>
+                                        </h3>
 
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
+                                        <div class="product-price">
+                                            <?php echo $product->get_price_html(); ?>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
+                            <?php endwhile;
+                            wp_reset_postdata();
+                        endif; ?>
 
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Tablets</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Apple - 11 Inch iPad Pro with Wi-Fi 256GB
-                                </a></h3><!-- End .product-title -->
-                            <div class="product-price">
-                                $899.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
+                    </div>
+                </div>
 
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #edd2c8;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                                <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
+            <?php endforeach; ?>
 
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-10.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Cell Phone</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Google - Pixel 3 XL 128GB</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $899.99
-                                <span class="new-price">$350.00</span>
-                                <span class="old-price">Was $410.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 10 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #333333;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-8.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Audio</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Bose - SoundLink Bluetooth Speaker</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $79.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 6 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-top">Top</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-7.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Laptops</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">MacBook Pro 13" Display, i5</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $1,199.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-                </div><!-- End .owl-carousel -->
-            </div><!-- .End .tab-pane -->
-            <div class="tab-pane p-0 fade" id="elec-best-tab" role="tabpanel" aria-labelledby="elec-best-link">
-                <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
-                    data-owl-options='{
-                                "nav": false, 
-                                "dots": true,
-                                "margin": 20,
-                                "loop": false,
-                                "responsive": {
-                                    "0": {
-                                        "items":2
-                                    },
-                                    "480": {
-                                        "items":2
-                                    },
-                                    "768": {
-                                        "items":3
-                                    },
-                                    "992": {
-                                        "items":4
-                                    },
-                                    "1280": {
-                                        "items":5,
-                                        "nav": true
-                                    }
-                                }
-                            }'>
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-top">Top</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-7.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Laptops</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">MacBook Pro 13" Display, i5</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $1,199.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-8.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Audio</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Bose - SoundLink Bluetooth Speaker</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $79.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 6 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-new">New</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-6.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Appliances</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Neato Robotics</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $399.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 12 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-10.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Cell Phone</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Google - Pixel 3 XL 128GB</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $899.99
-                                <span class="new-price">$350.00</span>
-                                <span class="old-price">Was $410.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 10 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #333333;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-new">New</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-9.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Tablets</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Apple - 11 Inch iPad Pro with Wi-Fi 256GB
-                                </a></h3><!-- End .product-title -->
-                            <div class="product-price">
-                                $899.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #edd2c8;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                                <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-                </div><!-- End .owl-carousel -->
-            </div><!-- .End .tab-pane -->
-        </div><!-- End .tab-content -->
+        </div>
     </div><!-- End .container -->
 
     <div class="mb-3"></div><!-- End .mb-3 -->
@@ -1327,15 +817,15 @@ get_header();
                 <ul class="nav nav-pills nav-border-anim justify-content-center" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="furn-new-link" data-toggle="tab" href="#furn-new-tab" role="tab"
-                            aria-controls="furn-new-tab" aria-selected="true">New</a>
+                            aria-controls="furn-new-tab" aria-selected="true">All</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="furn-featured-link" data-toggle="tab" href="#furn-featured-tab"
-                            role="tab" aria-controls="furn-featured-tab" aria-selected="false">Featured</a>
+                            role="tab" aria-controls="furn-featured-tab" aria-selected="false">Furniture</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="furn-best-link" data-toggle="tab" href="#furn-best-tab" role="tab"
-                            aria-controls="furn-best-tab" aria-selected="false">Best Seller</a>
+                            aria-controls="furn-best-tab" aria-selected="false">Shoes</a>
                     </li>
                 </ul>
             </div><!-- End .heading-right -->
