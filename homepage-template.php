@@ -549,10 +549,10 @@ get_header();
 
     <div class="container electronics">
         <?php
-    $section_title = get_theme_mod('gebeyashoptheme_home_category1_title');
-    $raw_ids = get_theme_mod('gebeyashoptheme_home_category1_categories');
-    $category_ids = array_filter(array_map('intval', explode(',', $raw_ids)));
-    ?>
+        $section_title = get_theme_mod('gebeyashoptheme_home_category1_title');
+        $raw_ids = get_theme_mod('gebeyashoptheme_home_category1_categories');
+        $category_ids = array_filter(array_map('intval', explode(',', $raw_ids)));
+        ?>
         <div class="heading heading-flex heading-border mb-3">
             <div class="heading-left">
                 <h2 class="title"><?php echo esc_html($section_title ? $section_title : 'Category'); ?></h2>
@@ -807,754 +807,264 @@ get_header();
 
     <div class="mb-1"></div><!-- End .mb-1 -->
 
+
     <div class="container furniture">
+        <?php
+        $title = get_theme_mod('gebeyashoptheme_home_category2_title');
+
+        $raw_ids = get_theme_mod('gebeyashoptheme_home_category2_categories');
+        $category_ids = array_filter(array_map('intval', explode(',', $raw_ids)));
+        ?>
         <div class="heading heading-flex heading-border mb-3">
             <div class="heading-left">
-                <h2 class="title">Furniture</h2><!-- End .title -->
-            </div><!-- End .heading-left -->
+                <h2 class="title"><?php echo esc_html($title ? $title : 'Furniture'); ?></h2>
+            </div>
 
             <div class="heading-right">
                 <ul class="nav nav-pills nav-border-anim justify-content-center" role="tablist">
+
                     <li class="nav-item">
-                        <a class="nav-link active" id="furn-new-link" data-toggle="tab" href="#furn-new-tab" role="tab"
-                            aria-controls="furn-new-tab" aria-selected="true">All</a>
+                        <a class="nav-link active" id="furn-new-link" data-toggle="tab" href="#furn-new-tab"
+                            role="tab">All</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="furn-featured-link" data-toggle="tab" href="#furn-featured-tab"
-                            role="tab" aria-controls="furn-featured-tab" aria-selected="false">Furniture</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="furn-best-link" data-toggle="tab" href="#furn-best-tab" role="tab"
-                            aria-controls="furn-best-tab" aria-selected="false">Shoes</a>
-                    </li>
+
+                    <?php if (!empty($category_ids)): ?>
+                        <?php foreach ($category_ids as $cat_id):
+                            $term = get_term($cat_id, 'product_cat');
+                            if (is_wp_error($term) || !$term)
+                                continue;
+                            ?>
+                            <li class="nav-item">
+                                <a class="nav-link" id="furn-<?php echo $cat_id; ?>-link" data-toggle="tab"
+                                    href="#furn-<?php echo $cat_id; ?>-tab" role="tab">
+                                    <?php echo esc_html($term->name); ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
                 </ul>
-            </div><!-- End .heading-right -->
-        </div><!-- End .heading -->
+            </div>
+        </div>
 
         <div class="tab-content tab-content-carousel">
-            <div class="tab-pane p-0 fade show active" id="furn-new-tab" role="tabpanel"
-                aria-labelledby="furn-new-link">
+
+            <!-- ALL TAB -->
+            <div class="tab-pane p-0 fade show active" id="furn-new-tab" role="tabpanel">
+
                 <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
                     data-owl-options='{
-                                "nav": false, 
-                                "dots": true,
-                                "margin": 20,
-                                "loop": false,
-                                "responsive": {
-                                    "0": {
-                                        "items":2
-                                    },
-                                    "480": {
-                                        "items":2
-                                    },
-                                    "768": {
-                                        "items":3
-                                    },
-                                    "992": {
-                                        "items":4
-                                    },
-                                    "1280": {
-                                        "items":5,
-                                        "nav": true
-                                    }
-                                }
-                            }'>
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-new">New</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-11.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Tables</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Block Side Table/Trolley</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $229.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 12 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #333333;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #e2e2e2;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-12.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Sofas</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Roots Sofa Bed</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $1,199.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-13.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Lighting</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Carronade Large Suspension Lamp</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                <span class="new-price">$892.00</span>
-                                <span class="old-price">Was $939.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 6 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #dddad5;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #825a45;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-14.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Chairs</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Wingback Chair</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $210.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #999999;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #cc9999;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-15.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Chairs</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Flow Slim Armchair</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                <span class="new-price">$737,00</span>
-                                <span class="old-price">Was $820.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 10 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #877666;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-                </div><!-- End .owl-carousel -->
-            </div><!-- .End .tab-pane -->
-            <div class="tab-pane p-0 fade" id="furn-featured-tab" role="tabpanel" aria-labelledby="furn-featured-link">
-                <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
-                    data-owl-options='{
-                                "nav": false, 
-                                "dots": true,
-                                "margin": 20,
-                                "loop": false,
-                                "responsive": {
-                                    "0": {
-                                        "items":2
-                                    },
-                                    "480": {
-                                        "items":2
-                                    },
-                                    "768": {
-                                        "items":3
-                                    },
-                                    "992": {
-                                        "items":4
-                                    },
-                                    "1280": {
-                                        "items":5,
-                                        "nav": true
-                                    }
-                                }
-                            }'>
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-13.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Lighting</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Carronade Large Suspension Lamp</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                <span class="new-price">$892.00</span>
-                                <span class="old-price">Was $939.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 6 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #dddad5;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #825a45;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-14.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Chairs</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Wingback Chair</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $210.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #999999;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #cc9999;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-new">New</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-11.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Tables</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Block Side Table/Trolley</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $229.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 12 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #333333;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #e2e2e2;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-15.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Chairs</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Flow Slim Armchair</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                <span class="new-price">$737,00</span>
-                                <span class="old-price">Was $820.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 10 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #877666;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-12.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Sofas</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Roots Sofa Bed</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $1,199.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-                </div><!-- End .owl-carousel -->
-            </div><!-- .End .tab-pane -->
-            <div class="tab-pane p-0 fade" id="furn-best-tab" role="tabpanel" aria-labelledby="furn-best-link">
-                <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
-                    data-owl-options='{
-                                "nav": false, 
-                                "dots": true,
-                                "margin": 20,
-                                "loop": false,
-                                "responsive": {
-                                    "0": {
-                                        "items":2
-                                    },
-                                    "480": {
-                                        "items":2
-                                    },
-                                    "768": {
-                                        "items":3
-                                    },
-                                    "992": {
-                                        "items":4
-                                    },
-                                    "1280": {
-                                        "items":5,
-                                        "nav": true
-                                    }
-                                }
-                            }'>
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-12.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Sofas</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Roots Sofa Bed</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $1,199.99
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-13.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Lighting</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Carronade Large Suspension Lamp</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                <span class="new-price">$892.00</span>
-                                <span class="old-price">Was $939.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 6 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #dddad5;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #825a45;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-14.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Chairs</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Wingback Chair</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                $210.00
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 4 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #999999;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #cc9999;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-
-                    <div class="product">
-                        <figure class="product-media">
-                            <span class="product-label label-sale">Sale</span>
-                            <a href="product.html">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demos/demo-13/products/product-15.jpg"
-                                    alt="Product image" class="product-image">
-                            </a>
-
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                                        wishlist</span></a>
-                                <a href="#" class="btn-product-icon btn-compare"
-                                    title="Compare"><span>Compare</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                    title="Quick view"><span>Quick view</span></a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <div class="product-action">
-                                <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to
-                                        cart</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media -->
-
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">Chairs</a>
-                            </div><!-- End .product-cat -->
-                            <h3 class="product-title"><a href="product.html">Flow Slim Armchair</a></h3>
-                            <!-- End .product-title -->
-                            <div class="product-price">
-                                <span class="new-price">$737,00</span>
-                                <span class="old-price">Was $820.00</span>
-                            </div><!-- End .product-price -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                </div><!-- End .ratings -->
-                                <span class="ratings-text">( 10 Reviews )</span>
-                            </div><!-- End .rating-container -->
-
-                            <div class="product-nav product-nav-dots">
-                                <a href="#" class="active" style="background: #877666;"><span class="sr-only">Color
-                                        name</span></a>
-                                <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                            </div><!-- End .product-nav -->
-                        </div><!-- End .product-body -->
-                    </div><!-- End .product -->
-                </div><!-- End .owl-carousel -->
-            </div><!-- .End .tab-pane -->
-        </div><!-- End .tab-content -->
+                    "nav": false,
+                    "dots": true,
+                    "margin": 20,
+                    "loop": false,
+                    "responsive": {
+                        "0": {"items":2},
+                        "480": {"items":2},
+                        "768": {"items":3},
+                        "992": {"items":4},
+                        "1280": {"items":5,"nav": true}
+                    }
+                 }'>
+
+                    <?php
+                    $args = [
+                        'post_type' => 'product',
+                        'posts_per_page' => 10,
+                        'orderby' => 'date',
+                        'order' => 'DESC',
+                    ];
+
+                    if (!empty($category_ids)) {
+                        $args['tax_query'] = [
+                            [
+                                'taxonomy' => 'product_cat',
+                                'field' => 'term_id',
+                                'terms' => $category_ids,
+                            ]
+                        ];
+                    }
+
+                    $query = new WP_Query($args);
+
+                    if ($query->have_posts()):
+                        while ($query->have_posts()):
+                            $query->the_post();
+                            global $product;
+                            ?>
+
+                            <div class="product">
+                                <figure class="product-media">
+                                    <a href="<?php the_permalink(); ?>">
+                                        <?php echo woocommerce_get_product_thumbnail(); ?>
+                                    </a>
+
+                                    <div class="product-action-vertical">
+                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
+                                                wishlist</span></a>
+                                        <a href="#" class="btn-product-icon btn-compare"
+                                            title="Compare"><span>Compare</span></a>
+                                        <a href="#" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick
+                                                view</span></a>
+                                    </div>
+
+                                    <div class="product-action">
+                                        <a href="<?php echo esc_url($product->add_to_cart_url()); ?>"
+                                            class="btn-product btn-cart" title="Add to cart">
+                                            <span><?php echo esc_html($product->add_to_cart_text()); ?></span>
+                                        </a>
+                                    </div>
+                                </figure>
+
+                                <div class="product-body">
+                                    <div class="product-cat">
+                                        <?php echo wc_get_product_category_list($product->get_id()); ?>
+                                    </div>
+
+                                    <h3 class="product-title">
+                                        <a href="<?php the_permalink(); ?>">
+                                            <?php
+                                            $t = get_the_title();
+                                            $words = explode(' ', $t);
+                                            if (count($words) > 7) {
+                                                $t = implode(' ', array_slice($words, 0, 7)) . '...';
+                                            }
+                                            echo esc_html($t);
+                                            ?>
+                                        </a>
+                                    </h3>
+
+                                    <div class="product-price">
+                                        <?php echo $product->get_price_html(); ?>
+                                    </div>
+
+                                    <div class="ratings-container">
+                                        <div class="ratings">
+                                            <div class="ratings-val"
+                                                style="width: <?php echo ($product->get_average_rating() / 5) * 100; ?>%;"></div>
+                                        </div>
+                                        <span class="ratings-text">( <?php echo $product->get_review_count(); ?> Reviews
+                                            )</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <?php endwhile;
+                        wp_reset_postdata(); endif; ?>
+
+                </div>
+            </div>
+
+            <!-- CATEGORY TABS -->
+            <?php if (!empty($category_ids)): ?>
+                <?php foreach ($category_ids as $cat_id):
+                    $term = get_term($cat_id, 'product_cat');
+                    if (is_wp_error($term) || !$term)
+                        continue;
+                    ?>
+
+                    <div class="tab-pane p-0 fade" id="furn-<?php echo $cat_id; ?>-tab" role="tabpanel">
+
+                        <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
+                            data-owl-options='{
+                        "nav": false,
+                        "dots": true,
+                        "margin": 20,
+                        "loop": false,
+                        "responsive": {
+                            "0": {"items":2},
+                            "480": {"items":2},
+                            "768": {"items":3},
+                            "992": {"items":4},
+                            "1280": {"items":5,"nav": true}
+                        }
+                     }'>
+
+                            <?php
+                            $query = new WP_Query([
+                                'post_type' => 'product',
+                                'posts_per_page' => 10,
+                                'tax_query' => [
+                                    [
+                                        'taxonomy' => 'product_cat',
+                                        'field' => 'term_id',
+                                        'terms' => $cat_id,
+                                    ]
+                                ]
+                            ]);
+
+                            if ($query->have_posts()):
+                                while ($query->have_posts()):
+                                    $query->the_post();
+                                    global $product;
+                                    ?>
+
+                                    <div class="product">
+                                        <figure class="product-media">
+                                            <a href="<?php the_permalink(); ?>">
+                                                <?php echo woocommerce_get_product_thumbnail(); ?>
+                                            </a>
+
+                                            <div class="product-action-vertical">
+                                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
+                                                        wishlist</span></a>
+                                                <a href="#" class="btn-product-icon btn-compare"
+                                                    title="Compare"><span>Compare</span></a>
+                                                <a href="#" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick
+                                                        view</span></a>
+                                            </div>
+
+                                            <div class="product-action">
+                                                <a href="<?php echo esc_url($product->add_to_cart_url()); ?>"
+                                                    class="btn-product btn-cart" title="Add to cart">
+                                                    <span><?php echo esc_html($product->add_to_cart_text()); ?></span>
+                                                </a>
+                                            </div>
+                                        </figure>
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <?php echo wc_get_product_category_list($product->get_id()); ?>
+                                            </div>
+
+                                            <h3 class="product-title">
+                                                <a href="<?php the_permalink(); ?>">
+                                                    <?php
+                                                    $t = get_the_title();
+                                                    $words = explode(' ', $t);
+                                                    if (count($words) > 7) {
+                                                        $t = implode(' ', array_slice($words, 0, 7)) . '...';
+                                                    }
+                                                    echo esc_html($t);
+                                                    ?>
+                                                </a>
+                                            </h3>
+
+                                            <div class="product-price">
+                                                <?php echo $product->get_price_html(); ?>
+                                            </div>
+
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val"
+                                                        style="width: <?php echo ($product->get_average_rating() / 5) * 100; ?>%;"></div>
+                                                </div>
+                                                <span class="ratings-text">( <?php echo $product->get_review_count(); ?> Reviews
+                                                    )</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <?php endwhile;
+                                wp_reset_postdata(); endif; ?>
+
+                        </div>
+                    </div>
+
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+        </div>
     </div><!-- End .container -->
 
     <div class="mb-3"></div><!-- End .mb-3 -->
