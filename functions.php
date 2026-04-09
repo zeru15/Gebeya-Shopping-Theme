@@ -775,7 +775,9 @@ add_action('wp_enqueue_scripts', 'theme_scripts');
  */
 add_filter('redirect_canonical', function ($redirect_url, $requested_url) {
 
-    if (function_exists('is_shop') && is_shop() &&
+    if (
+        function_exists('is_shop') &&
+        is_shop() &&
         (isset($_GET['category']) || isset($_GET['min_price']))
     ) {
         return false;
@@ -785,13 +787,15 @@ add_filter('redirect_canonical', function ($redirect_url, $requested_url) {
 }, 10, 2);
 
 
+/**
+ * Force pagination reset on filter
+ */
 add_action('pre_get_posts', function ($query) {
 
     if (
         !is_admin() &&
         $query->is_main_query() &&
-        function_exists('is_shop') &&
-        is_shop()
+        $query->is_post_type_archive('product') // ✅ BETTER THAN is_shop()
     ) {
 
         if (
@@ -1055,23 +1059,24 @@ add_action('customize_controls_enqueue_scripts', 'gebeyashoptheme_customizer_scr
 /**
  * Adding Categories on Customizer Settings
  */
-function gebeyashoptheme_home_categories_customizer($wp_customize) {
+function gebeyashoptheme_home_categories_customizer($wp_customize)
+{
 
     // Section
     $wp_customize->add_section('gebeyashoptheme_home_categories', array(
-        'title'    => __('Homepage Categories', 'gebeyashoptheme'),
+        'title' => __('Homepage Categories', 'gebeyashoptheme'),
         'priority' => 35,
     ));
 
     // Setting
     $wp_customize->add_setting('gebeyashoptheme_selected_categories', array(
-        'default'           => '',
+        'default' => '',
         'sanitize_callback' => 'sanitize_text_field',
     ));
 
     // Get categories
     $categories = get_terms(array(
-        'taxonomy'   => 'product_cat',
+        'taxonomy' => 'product_cat',
         'hide_empty' => false,
     ));
 
@@ -1092,62 +1097,62 @@ function gebeyashoptheme_home_categories_customizer($wp_customize) {
     </div>
 
     <script>
-    (function() {
+        (function () {
 
-        const limit = 6;
-        const checkboxes = document.querySelectorAll('.gebeya-cat-checkbox');
-        const search = document.getElementById('gebeya-cat-search');
-        const input = document.querySelector('[data-customize-setting-link="gebeyashoptheme_selected_categories"]');
+            const limit = 6;
+            const checkboxes = document.querySelectorAll('.gebeya-cat-checkbox');
+            const search = document.getElementById('gebeya-cat-search');
+            const input = document.querySelector('[data-customize-setting-link="gebeyashoptheme_selected_categories"]');
 
-        function updateSelection() {
-            let selected = [];
+            function updateSelection() {
+                let selected = [];
 
-            checkboxes.forEach(cb => {
-                if (cb.checked) selected.push(cb.value);
-            });
+                checkboxes.forEach(cb => {
+                    if (cb.checked) selected.push(cb.value);
+                });
 
-            // Save to Customizer
-            if (input) {
-                input.value = selected.join(',');
-                input.dispatchEvent(new Event('change'));
+                // Save to Customizer
+                if (input) {
+                    input.value = selected.join(',');
+                    input.dispatchEvent(new Event('change'));
+                }
+
+                // Disable others if limit reached
+                checkboxes.forEach(cb => {
+                    if (!cb.checked) {
+                        cb.disabled = selected.length >= limit;
+                        cb.parentElement.style.opacity = selected.length >= limit ? '0.5' : '1';
+                    } else {
+                        cb.disabled = false;
+                        cb.parentElement.style.opacity = '1';
+                    }
+                });
             }
 
-            // Disable others if limit reached
             checkboxes.forEach(cb => {
-                if (!cb.checked) {
-                    cb.disabled = selected.length >= limit;
-                    cb.parentElement.style.opacity = selected.length >= limit ? '0.5' : '1';
-                } else {
-                    cb.disabled = false;
-                    cb.parentElement.style.opacity = '1';
-                }
+                cb.addEventListener('change', updateSelection);
             });
-        }
 
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', updateSelection);
-        });
+            // Search filter
+            search.addEventListener('keyup', function () {
+                const value = this.value.toLowerCase();
 
-        // Search filter
-        search.addEventListener('keyup', function() {
-            const value = this.value.toLowerCase();
-
-            checkboxes.forEach(cb => {
-                const text = cb.parentElement.textContent.toLowerCase();
-                cb.parentElement.style.display = text.includes(value) ? 'block' : 'none';
+                checkboxes.forEach(cb => {
+                    const text = cb.parentElement.textContent.toLowerCase();
+                    cb.parentElement.style.display = text.includes(value) ? 'block' : 'none';
+                });
             });
-        });
 
-    })();
+        })();
     </script>
 
     <?php
 
     $wp_customize->add_control('gebeyashoptheme_categories_ui', array(
-        'label'       => __('Select up to 6 categories', 'gebeyashoptheme'),
-        'section'     => 'gebeyashoptheme_home_categories',
-        'settings'    => 'gebeyashoptheme_selected_categories',
-        'type'        => 'hidden',
+        'label' => __('Select up to 6 categories', 'gebeyashoptheme'),
+        'section' => 'gebeyashoptheme_home_categories',
+        'settings' => 'gebeyashoptheme_selected_categories',
+        'type' => 'hidden',
         'description' => ob_get_clean(),
     ));
 }
@@ -1157,10 +1162,11 @@ add_action('customize_register', 'gebeyashoptheme_home_categories_customizer');
 /**
  * Homepage Banner Customizer Setting
  */
-function gebeyashoptheme_home_banners_customizer($wp_customize) {
+function gebeyashoptheme_home_banners_customizer($wp_customize)
+{
 
     $wp_customize->add_section('gebeyashoptheme_home_banners', array(
-        'title'    => __('Homepage Banners', 'gebeyashoptheme'),
+        'title' => __('Homepage Banners', 'gebeyashoptheme'),
         'priority' => 40,
     ));
 
@@ -1173,9 +1179,9 @@ function gebeyashoptheme_home_banners_customizer($wp_customize) {
         ));
 
         $wp_customize->add_control("gebeyashoptheme_banner{$i}_title1", array(
-            'label'   => __("Banner {$i} - Title 1", 'gebeyashoptheme'),
+            'label' => __("Banner {$i} - Title 1", 'gebeyashoptheme'),
             'section' => 'gebeyashoptheme_home_banners',
-            'type'    => 'text',
+            'type' => 'text',
         ));
 
         // Title 2
@@ -1184,9 +1190,9 @@ function gebeyashoptheme_home_banners_customizer($wp_customize) {
         ));
 
         $wp_customize->add_control("gebeyashoptheme_banner{$i}_title2", array(
-            'label'   => __("Banner {$i} - Title 2", 'gebeyashoptheme'),
+            'label' => __("Banner {$i} - Title 2", 'gebeyashoptheme'),
             'section' => 'gebeyashoptheme_home_banners',
-            'type'    => 'text',
+            'type' => 'text',
         ));
 
         // Title 3
@@ -1195,9 +1201,9 @@ function gebeyashoptheme_home_banners_customizer($wp_customize) {
         ));
 
         $wp_customize->add_control("gebeyashoptheme_banner{$i}_title3", array(
-            'label'   => __("Banner {$i} - Title 3", 'gebeyashoptheme'),
+            'label' => __("Banner {$i} - Title 3", 'gebeyashoptheme'),
             'section' => 'gebeyashoptheme_home_banners',
-            'type'    => 'text',
+            'type' => 'text',
         ));
 
         // Button Link
@@ -1206,9 +1212,9 @@ function gebeyashoptheme_home_banners_customizer($wp_customize) {
         ));
 
         $wp_customize->add_control("gebeyashoptheme_banner{$i}_button_link", array(
-            'label'   => __("Banner {$i} - Button Link", 'gebeyashoptheme'),
+            'label' => __("Banner {$i} - Button Link", 'gebeyashoptheme'),
             'section' => 'gebeyashoptheme_home_banners',
-            'type'    => 'url',
+            'type' => 'url',
         ));
 
         // Button Text
@@ -1217,9 +1223,9 @@ function gebeyashoptheme_home_banners_customizer($wp_customize) {
         ));
 
         $wp_customize->add_control("gebeyashoptheme_banner{$i}_button_text", array(
-            'label'   => __("Banner {$i} - Button Text", 'gebeyashoptheme'),
+            'label' => __("Banner {$i} - Button Text", 'gebeyashoptheme'),
             'section' => 'gebeyashoptheme_home_banners',
-            'type'    => 'text',
+            'type' => 'text',
         ));
 
         // Image
@@ -1231,7 +1237,7 @@ function gebeyashoptheme_home_banners_customizer($wp_customize) {
             $wp_customize,
             "gebeyashoptheme_banner{$i}_image",
             array(
-                'label'   => __("Banner {$i} - Image", 'gebeyashoptheme'),
+                'label' => __("Banner {$i} - Image", 'gebeyashoptheme'),
                 'section' => 'gebeyashoptheme_home_banners',
             )
         ));
@@ -1243,7 +1249,8 @@ add_action('customize_register', 'gebeyashoptheme_home_banners_customizer');
 /**
  * Adding Hot Deals on Customizer Settings
  */
-function gebeyashoptheme_hot_deals_customizer($wp_customize) {
+function gebeyashoptheme_hot_deals_customizer($wp_customize)
+{
 
     $wp_customize->add_section('gebeyashoptheme_hot_deals', array(
         'title' => __('Homepage Hot Deals', 'gebeyashoptheme'),
@@ -1256,9 +1263,11 @@ function gebeyashoptheme_hot_deals_customizer($wp_customize) {
     ));
 
     // Custom Control Class
-    class Gebeya_Hot_Deals_Control extends WP_Customize_Control {
+    class Gebeya_Hot_Deals_Control extends WP_Customize_Control
+    {
 
-        public function render_content() {
+        public function render_content()
+        {
 
             $categories = get_terms([
                 'taxonomy' => 'product_cat',
@@ -1272,14 +1281,12 @@ function gebeyashoptheme_hot_deals_customizer($wp_customize) {
 
             <!-- Search -->
             <input type="text" id="hotDealsSearch" placeholder="Search category..."
-                   style="width:100%;margin-bottom:10px;padding:6px;">
+                style="width:100%;margin-bottom:10px;padding:6px;">
 
             <div id="hotDealsList" style="max-height:200px; overflow:auto; border:1px solid #ddd; padding:10px;">
                 <?php foreach ($categories as $cat): ?>
                     <label style="display:block;">
-                        <input type="checkbox"
-                               value="<?php echo $cat->term_id; ?>"
-                               <?php checked(in_array($cat->term_id, $saved)); ?>>
+                        <input type="checkbox" value="<?php echo $cat->term_id; ?>" <?php checked(in_array($cat->term_id, $saved)); ?>>
                         <?php echo $cat->name; ?>
                     </label>
                 <?php endforeach; ?>
@@ -1349,7 +1356,8 @@ add_action('customize_register', 'gebeyashoptheme_hot_deals_customizer');
 /**
  * Adding Category 1 on Customizer Settings
  */
-function gebeyashoptheme_homepage_category1_customizer($wp_customize) {
+function gebeyashoptheme_homepage_category1_customizer($wp_customize)
+{
 
     // SECTION
     $wp_customize->add_section('gebeyashoptheme_home_category1', array(
@@ -1376,9 +1384,11 @@ function gebeyashoptheme_homepage_category1_customizer($wp_customize) {
     ));
 
     // CUSTOM CONTROL (REUSABLE)
-    class Gebeya_Category1_Control extends WP_Customize_Control {
+    class Gebeya_Category1_Control extends WP_Customize_Control
+    {
 
-        public function render_content() {
+        public function render_content()
+        {
 
             $categories = get_terms([
                 'taxonomy' => 'product_cat',
@@ -1392,14 +1402,12 @@ function gebeyashoptheme_homepage_category1_customizer($wp_customize) {
 
             <!-- Search -->
             <input type="text" id="category1Search" placeholder="Search category..."
-                   style="width:100%;margin-bottom:10px;padding:6px;">
+                style="width:100%;margin-bottom:10px;padding:6px;">
 
             <div id="category1List" style="max-height:200px; overflow:auto; border:1px solid #ddd; padding:10px;">
                 <?php foreach ($categories as $cat): ?>
                     <label style="display:block;">
-                        <input type="checkbox"
-                               value="<?php echo $cat->term_id; ?>"
-                               <?php checked(in_array($cat->term_id, $saved)); ?>>
+                        <input type="checkbox" value="<?php echo $cat->term_id; ?>" <?php checked(in_array($cat->term_id, $saved)); ?>>
                         <?php echo $cat->name; ?>
                     </label>
                 <?php endforeach; ?>
@@ -1472,7 +1480,8 @@ add_action('customize_register', 'gebeyashoptheme_homepage_category1_customizer'
 /**
  * Adding Category 2 on Customizer Settings
  */
-function gebeyashoptheme_homepage_category2_customizer($wp_customize) {
+function gebeyashoptheme_homepage_category2_customizer($wp_customize)
+{
 
     // SECTION
     $wp_customize->add_section('gebeyashoptheme_home_category2', array(
@@ -1499,9 +1508,11 @@ function gebeyashoptheme_homepage_category2_customizer($wp_customize) {
     ));
 
     // CUSTOM CONTROL (SEPARATE CLASS NAME)
-    class Gebeya_Category2_Control extends WP_Customize_Control {
+    class Gebeya_Category2_Control extends WP_Customize_Control
+    {
 
-        public function render_content() {
+        public function render_content()
+        {
 
             $categories = get_terms([
                 'taxonomy' => 'product_cat',
@@ -1515,14 +1526,12 @@ function gebeyashoptheme_homepage_category2_customizer($wp_customize) {
 
             <!-- Search -->
             <input type="text" id="category2Search" placeholder="Search category..."
-                   style="width:100%;margin-bottom:10px;padding:6px;">
+                style="width:100%;margin-bottom:10px;padding:6px;">
 
             <div id="category2List" style="max-height:200px; overflow:auto; border:1px solid #ddd; padding:10px;">
                 <?php foreach ($categories as $cat): ?>
                     <label style="display:block;">
-                        <input type="checkbox"
-                               value="<?php echo $cat->term_id; ?>"
-                               <?php checked(in_array($cat->term_id, $saved)); ?>>
+                        <input type="checkbox" value="<?php echo $cat->term_id; ?>" <?php checked(in_array($cat->term_id, $saved)); ?>>
                         <?php echo $cat->name; ?>
                     </label>
                 <?php endforeach; ?>
