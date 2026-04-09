@@ -774,15 +774,25 @@ add_action('wp_enqueue_scripts', 'theme_scripts');
  * Prevent WordPress redirecting incorrectly
  */
 add_filter('redirect_canonical', function ($redirect_url, $requested_url) {
-    if (is_shop() && (isset($_GET['category']) || isset($_GET['min_price']))) {
+
+    if (function_exists('is_shop') && is_shop() &&
+        (isset($_GET['category']) || isset($_GET['min_price']))
+    ) {
         return false;
     }
+
     return $redirect_url;
 }, 10, 2);
 
+
 add_action('pre_get_posts', function ($query) {
 
-    if (!is_admin() && $query->is_main_query() && is_shop()) {
+    if (
+        !is_admin() &&
+        $query->is_main_query() &&
+        function_exists('is_shop') &&
+        is_shop()
+    ) {
 
         if (
             isset($_GET['category']) ||
