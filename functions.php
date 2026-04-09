@@ -723,7 +723,7 @@ add_action('woocommerce_product_query', function ($q) {
 function gebeyashoptheme_scripts()
 {
 
-    if (is_shop() || is_product_taxonomy()) {
+    if (class_exists('WooCommerce') && function_exists('is_shop') && is_shop() || is_product_taxonomy()) {
         wp_enqueue_script(
             'shop-filters',
             get_template_directory_uri() . '/assets/js/shop.js',
