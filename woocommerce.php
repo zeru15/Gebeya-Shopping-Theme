@@ -208,6 +208,8 @@ if (is_product()) {
                             'taxonomy' => 'pa_brand',
                             'hide_empty' => true,
                         ]);
+
+                        $selected_brands = isset($_GET['brand']) ? explode(',', $_GET['brand']) : [];
                         ?>
 
                         <div class="widget widget-collapsible">
@@ -219,32 +221,26 @@ if (is_product()) {
                                 <div class="widget-body">
                                     <div class="filter-items">
 
-                                        <?php foreach ($brands as $brand): ?>
+                                        <?php if (!empty($brands) && !is_wp_error($brands)): ?>
+                                            <?php foreach ($brands as $brand): ?>
 
-                                            <?php
-                                            $checked = (isset($_GET['brand']) && $_GET['brand'] == $brand->slug) ? 'checked' : '';
-                                            ?>
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
 
-                                            <?php
-                                            $selected_brands = isset($_GET['brand']) ? explode(',', $_GET['brand']) : [];
-                                            ?>
+                                                        <input type="checkbox" class="custom-control-input filter-brand"
+                                                            value="<?php echo esc_attr($brand->slug); ?>"
+                                                            id="brand-<?php echo esc_attr($brand->term_id); ?>" <?php checked(in_array($brand->slug, $selected_brands)); ?>>
 
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
+                                                        <label class="custom-control-label"
+                                                            for="brand-<?php echo esc_attr($brand->term_id); ?>">
+                                                            <?php echo esc_html($brand->name); ?>
+                                                        </label>
 
-                                                    <input type="checkbox" class="custom-control-input filter-brand"
-                                                        value="<?php echo esc_attr($brand['slug']); ?>"
-                                                        id="brand-<?php echo $brand['term_id']; ?>" <?php checked(in_array($brand['slug'], $selected_brands)); ?>>
-
-                                                    <label class="custom-control-label"
-                                                        for="brand-<?php echo $brand['term_id']; ?>">
-                                                        <?php echo $brand['name']; ?>
-                                                    </label>
-
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                        <?php endforeach; ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
 
                                     </div>
                                 </div>
