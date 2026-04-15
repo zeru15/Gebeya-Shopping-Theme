@@ -97,7 +97,7 @@ if (
                                     <img src="<?php echo $header_logo ?>" alt=" Logo" width="65" height="25">
                                 </a>
                             <?php else: ?>
-                                <a href="index.html" class="logo">
+                                <a href="<?php echo esc_url(site_url()); ?>" class="logo">
                                     <h1><?php bloginfo('name'); ?></h1>
                                 </a>
                             <?php endif; ?>
