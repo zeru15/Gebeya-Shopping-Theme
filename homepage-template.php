@@ -214,7 +214,7 @@ get_header();
                     </a>
 
                     <div class="banner-content">
-                        <h4 class="banner-subtitle text-white"><a href="#"><?php echo esc_url($banner2_title1) ?></a>
+                        <h4 class="banner-subtitle text-white"><a href="#"><?php echo ($banner2_title1) ?></a>
                         </h4>
                         <!-- End .banner-subtitle -->
                         <h3 class="banner-title text-white"><a
