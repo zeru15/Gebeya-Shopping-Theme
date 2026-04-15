@@ -164,7 +164,9 @@
 
 
                             <?php
-                            $cart_count = WC()->cart->get_cart_contents_count();
+                            if (class_exists('WooCommerce') && WC()->cart) {
+                                $cart_count = WC()->cart->get_cart_contents_count();
+                            }
                             ?>
 
                             <div class="dropdown cart-dropdown">
@@ -271,7 +273,7 @@
                                 Browse Categories
                             </a>
 
-                            <div class="dropdown-menu <?php if(is_front_page()) {?> show <?php } ?>">
+                            <div class="dropdown-menu <?php if (is_front_page()) { ?> show <?php } ?>">
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
 
