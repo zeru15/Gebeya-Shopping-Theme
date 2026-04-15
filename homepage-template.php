@@ -218,7 +218,7 @@ get_header();
                         </h4>
                         <!-- End .banner-subtitle -->
                         <h3 class="banner-title text-white"><a
-                                href="#"><?php echo $banner2_title1 ?><br><span><?php echo $banner2_title3 ?></span></a>
+                                href="#"><?php echo $banner2_title2 ?><br><span><?php echo $banner2_title3 ?></span></a>
                         </h3><!-- End .banner-title -->
                         <a href="<?php echo esc_url($banner2_btn_link) ?>"
                             class="banner-link"><?php echo $banner2_btn_text ?><i class="icon-long-arrow-right"></i></a>

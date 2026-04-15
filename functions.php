@@ -779,7 +779,7 @@ add_action('wp_enqueue_scripts', 'theme_scripts');
  */
 add_filter('redirect_canonical', function ($redirect_url, $requested_url) {
 
-    if (
+    if ( class_exists('WooCommerce') &&
         function_exists('is_shop') &&
         is_shop() &&
         (isset($_GET['category']) || isset($_GET['min_price']))

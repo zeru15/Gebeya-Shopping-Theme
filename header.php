@@ -1,3 +1,15 @@
+<?php
+$cart_count = 0;
+
+if (
+    class_exists('WooCommerce') &&
+    function_exists('WC') &&
+    WC()->cart
+) {
+    $cart_count = WC()->cart->get_cart_contents_count();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -163,24 +175,18 @@
                         <div class="header-dropdown-link">
 
 
-                            <?php
-                            if (class_exists('WooCommerce') && WC()->cart) {
-                                $cart_count = WC()->cart->get_cart_contents_count();
-                            }
-                            ?>
-
                             <div class="dropdown cart-dropdown">
 
-                                <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="dropdown-toggle"
-                                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                    data-display="static">
+                                <a href="<?php echo (class_exists('WooCommerce') && function_exists('wc_get_cart_url')) ? esc_url(wc_get_cart_url()) : '#'; ?>"
+                                    class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false" data-display="static">
 
                                     <i class="icon-shopping-cart"></i>
                                     <span class="cart-count"><?php echo esc_html($cart_count); ?></span>
                                     <span class="cart-txt"><?php _e('Cart', 'gebeyashoptheme'); ?></span>
                                 </a>
 
-                                <?php if ($cart_count > 0): ?>
+                                <?php if (!empty($cart_count) && $cart_count > 0): ?>
 
                                     <div class="dropdown-menu dropdown-menu-right">
 
@@ -210,7 +216,7 @@
                                                             <span class="cart-product-qty">
                                                                 <?php echo esc_html($cart_item['quantity']); ?>
                                                             </span>
-                                                            x <?php echo wc_price($product->get_price()); ?>
+                                                            x <?php echo (class_exists('WooCommerce') && function_exists('wc_price')) ? wc_price($product->get_price()) : '#'; ?>
                                                         </span>
                                                     </div>
 
@@ -220,7 +226,7 @@
                                                         </a>
                                                     </figure>
 
-                                                    <a href="<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>"
+                                                    <a href="<?php echo (class_exists('WooCommerce') && function_exists('wc_get_cart_remove_url')) ? esc_url(wc_get_cart_remove_url($cart_item_key)) : '#'; ?>"
                                                         class="btn-remove"
                                                         title="<?php _e('Remove Product', 'gebeyashoptheme'); ?>">
                                                         <i class="icon-close"></i>
@@ -242,11 +248,11 @@
 
                                         <!-- Actions -->
                                         <div class="dropdown-cart-action">
-                                            <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="btn btn-primary">
+                                            <a href="<?php echo (class_exists('WooCommerce') && function_exists('wc_get_cart_url')) ? esc_url(wc_get_cart_url()) : '#'; ?>" class="btn btn-primary">
                                                 <?php _e('View Cart', 'gebeyashoptheme'); ?>
                                             </a>
 
-                                            <a href="<?php echo esc_url(wc_get_checkout_url()); ?>"
+                                            <a href="<?php echo (class_exists('WooCommerce') && function_exists('wc_get_checkout_url')) ? esc_url(wc_get_checkout_url()) : '#'; ?>"
                                                 class="btn btn-outline-primary-2">
                                                 <span><?php _e('Checkout', 'gebeyashoptheme'); ?></span>
                                                 <i class="icon-long-arrow-right"></i>
