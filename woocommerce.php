@@ -233,12 +233,12 @@ if (is_product()) {
                                                 <div class="custom-control custom-checkbox">
 
                                                     <input type="checkbox" class="custom-control-input filter-brand"
-                                                        value="<?php echo esc_attr($brand->slug); ?>"
-                                                        id="brand-<?php echo $brand->term_id; ?>" <?php checked(in_array($brand->slug, $selected_brands)); ?>>
+                                                        value="<?php echo esc_attr($brand['slug']); ?>"
+                                                        id="brand-<?php echo $brand['term_id']; ?>" <?php checked(in_array($brand['slug'], $selected_brands)); ?>>
 
                                                     <label class="custom-control-label"
-                                                        for="brand-<?php echo $brand->term_id; ?>">
-                                                        <?php echo $brand->name; ?>
+                                                        for="brand-<?php echo $brand['term_id']; ?>">
+                                                        <?php echo $brand['name']; ?>
                                                     </label>
 
                                                 </div>
