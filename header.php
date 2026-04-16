@@ -94,7 +94,7 @@ if (
                         <div class="logo">
                             <?php if ($header_logo): ?>
                                 <a href="<?php echo esc_url(site_url()); ?>" class="logo">
-                                    <img src="<?php echo $header_logo ?>" alt=" Logo" width="65" height="25">
+                                    <img src="<?php echo $header_logo ?>" alt=" Logo" width="105" height="65">
                                 </a>
                             <?php else: ?>
                                 <a href="<?php echo esc_url(site_url()); ?>" class="logo">
